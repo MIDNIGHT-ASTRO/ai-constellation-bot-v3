@@ -16,3 +16,4 @@ cd ai-constellation-bot-v3
 npm install
 cp .env.example .env    # 필요시 API 키 넣기
 npm start
+# ai-constellation-bot-v3
