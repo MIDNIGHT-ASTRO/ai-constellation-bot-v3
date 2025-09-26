@@ -1,0 +1,21 @@
+# Node modules
+node_modules/
+npm-debug.log*
+yarn.lock
+package-lock.json
+
+# 환경변수/비밀키
+.env
+.env.*.local
+*.env
+
+# 빌드 산출물
+dist/
+build/
+.out/
+.vercel/
+.next/
+
+# 맥/에디터 관련
+.DS_Store
+.vscode/

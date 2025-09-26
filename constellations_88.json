@@ -1,0 +1,1391 @@
+{
+  "_meta": {
+    "title": "IAU 88 constellations (scaffold)",
+    "version": "0.1.0",
+    "generated": "2025-09-25",
+    "notes": [
+      "All 88 IAU constellations listed with fields ready for population.",
+      "Fill 'brightest_star' and 'notable_stars' using HYG/BSC/Stellarium sources.",
+      "Optionally set hemisphere/best_season_northern/best_months_northern for quiz generation."
+    ]
+  },
+  "constellations": [
+    {
+      "iau_code": "AND",
+      "name_en": "Andromeda",
+      "name_ko": "",
+      "hemisphere": "",
+      "best_season_northern": "",
+      "best_months_northern": [],
+      "brightest_star": {
+        "name": "",
+        "mag": null
+      },
+      "notable_stars": []
+    },
+    {
+      "iau_code": "ANT",
+      "name_en": "Antlia",
+      "name_ko": "",
+      "hemisphere": "",
+      "best_season_northern": "",
+      "best_months_northern": [],
+      "brightest_star": {
+        "name": "",
+        "mag": null
+      },
+      "notable_stars": []
+    },
+    {
+      "iau_code": "APS",
+      "name_en": "Apus",
+      "name_ko": "",
+      "hemisphere": "",
+      "best_season_northern": "",
+      "best_months_northern": [],
+      "brightest_star": {
+        "name": "",
+        "mag": null
+      },
+      "notable_stars": []
+    },
+    {
+      "iau_code": "AQR",
+      "name_en": "Aquarius",
+      "name_ko": "물병자리",
+      "hemisphere": "EQU",
+      "best_season_northern": "autumn",
+      "best_months_northern": [
+        10,
+        11
+      ],
+      "brightest_star": {
+        "name": "Sadalsuud",
+        "mag": 2.9
+      },
+      "notable_stars": [
+        {
+          "name": "Sadalmelik",
+          "vmag": 2.95
+        },
+        {
+          "name": "Sadalsuud",
+          "vmag": 2.9
+        }
+      ]
+    },
+    {
+      "iau_code": "AQL",
+      "name_en": "Aquila",
+      "name_ko": "독수리자리",
+      "hemisphere": "N",
+      "best_season_northern": "summer",
+      "best_months_northern": [
+        7,
+        8,
+        9
+      ],
+      "brightest_star": {
+        "name": "Altair",
+        "mag": 0.77
+      },
+      "notable_stars": [
+        {
+          "name": "Altair",
+          "vmag": 0.77
+        }
+      ]
+    },
+    {
+      "iau_code": "ARA",
+      "name_en": "Ara",
+      "name_ko": "",
+      "hemisphere": "",
+      "best_season_northern": "",
+      "best_months_northern": [],
+      "brightest_star": {
+        "name": "",
+        "mag": null
+      },
+      "notable_stars": []
+    },
+    {
+      "iau_code": "ARI",
+      "name_en": "Aries",
+      "name_ko": "",
+      "hemisphere": "",
+      "best_season_northern": "",
+      "best_months_northern": [],
+      "brightest_star": {
+        "name": "",
+        "mag": null
+      },
+      "notable_stars": []
+    },
+    {
+      "iau_code": "AUR",
+      "name_en": "Auriga",
+      "name_ko": "마차부자리",
+      "hemisphere": "N",
+      "best_season_northern": "winter",
+      "best_months_northern": [
+        1,
+        2,
+        3
+      ],
+      "brightest_star": {
+        "name": "Capella",
+        "mag": 0.08
+      },
+      "notable_stars": [
+        {
+          "name": "Capella",
+          "vmag": 0.08
+        }
+      ]
+    },
+    {
+      "iau_code": "BOO",
+      "name_en": "Boötes",
+      "name_ko": "목동자리",
+      "hemisphere": "N",
+      "best_season_northern": "spring",
+      "best_months_northern": [
+        4,
+        5,
+        6
+      ],
+      "brightest_star": {
+        "name": "Arcturus",
+        "mag": -0.05
+      },
+      "notable_stars": [
+        {
+          "name": "Arcturus",
+          "vmag": -0.05
+        }
+      ]
+    },
+    {
+      "iau_code": "CAE",
+      "name_en": "Caelum",
+      "name_ko": "",
+      "hemisphere": "",
+      "best_season_northern": "",
+      "best_months_northern": [],
+      "brightest_star": {
+        "name": "",
+        "mag": null
+      },
+      "notable_stars": []
+    },
+    {
+      "iau_code": "CAM",
+      "name_en": "Camelopardalis",
+      "name_ko": "",
+      "hemisphere": "",
+      "best_season_northern": "",
+      "best_months_northern": [],
+      "brightest_star": {
+        "name": "",
+        "mag": null
+      },
+      "notable_stars": []
+    },
+    {
+      "iau_code": "CNC",
+      "name_en": "Cancer",
+      "name_ko": "",
+      "hemisphere": "",
+      "best_season_northern": "",
+      "best_months_northern": [],
+      "brightest_star": {
+        "name": "",
+        "mag": null
+      },
+      "notable_stars": []
+    },
+    {
+      "iau_code": "CVN",
+      "name_en": "Canes Venatici",
+      "name_ko": "",
+      "hemisphere": "",
+      "best_season_northern": "",
+      "best_months_northern": [],
+      "brightest_star": {
+        "name": "",
+        "mag": null
+      },
+      "notable_stars": []
+    },
+    {
+      "iau_code": "CMA",
+      "name_en": "Canis Major",
+      "name_ko": "큰개자리",
+      "hemisphere": "N",
+      "best_season_northern": "winter",
+      "best_months_northern": [
+        1,
+        2,
+        3
+      ],
+      "brightest_star": {
+        "name": "Sirius",
+        "mag": -1.46
+      },
+      "notable_stars": [
+        {
+          "name": "Sirius",
+          "vmag": -1.46
+        }
+      ]
+    },
+    {
+      "iau_code": "CMI",
+      "name_en": "Canis Minor",
+      "name_ko": "",
+      "hemisphere": "",
+      "best_season_northern": "",
+      "best_months_northern": [],
+      "brightest_star": {
+        "name": "",
+        "mag": null
+      },
+      "notable_stars": []
+    },
+    {
+      "iau_code": "CAP",
+      "name_en": "Capricornus",
+      "name_ko": "",
+      "hemisphere": "",
+      "best_season_northern": "",
+      "best_months_northern": [],
+      "brightest_star": {
+        "name": "",
+        "mag": null
+      },
+      "notable_stars": []
+    },
+    {
+      "iau_code": "CAR",
+      "name_en": "Carina",
+      "name_ko": "용골자리",
+      "hemisphere": "S",
+      "best_season_northern": "summer",
+      "best_months_northern": [
+        1,
+        2,
+        3
+      ],
+      "brightest_star": {
+        "name": "Canopus",
+        "mag": -0.74
+      },
+      "notable_stars": [
+        {
+          "name": "Canopus",
+          "vmag": -0.74
+        }
+      ]
+    },
+    {
+      "iau_code": "CAS",
+      "name_en": "Cassiopeia",
+      "name_ko": "카시오페이아자리",
+      "hemisphere": "N",
+      "best_season_northern": "autumn",
+      "best_months_northern": [
+        9,
+        10,
+        11
+      ],
+      "brightest_star": {
+        "name": "Schedar",
+        "mag": 2.24
+      },
+      "notable_stars": [
+        {
+          "name": "Schedar",
+          "vmag": 2.24
+        },
+        {
+          "name": "Caph",
+          "vmag": 2.28
+        }
+      ]
+    },
+    {
+      "iau_code": "CEN",
+      "name_en": "Centaurus",
+      "name_ko": "센타우루스자리",
+      "hemisphere": "S",
+      "best_season_northern": "spring",
+      "best_months_northern": [
+        4,
+        5,
+        6
+      ],
+      "brightest_star": {
+        "name": "Rigil Kentaurus",
+        "mag": -0.27
+      },
+      "notable_stars": [
+        {
+          "name": "Rigil Kentaurus",
+          "vmag": -0.27
+        },
+        {
+          "name": "Hadar",
+          "vmag": 0.61
+        }
+      ]
+    },
+    {
+      "iau_code": "CEP",
+      "name_en": "Cepheus",
+      "name_ko": "",
+      "hemisphere": "",
+      "best_season_northern": "",
+      "best_months_northern": [],
+      "brightest_star": {
+        "name": "",
+        "mag": null
+      },
+      "notable_stars": []
+    },
+    {
+      "iau_code": "CET",
+      "name_en": "Cetus",
+      "name_ko": "",
+      "hemisphere": "",
+      "best_season_northern": "",
+      "best_months_northern": [],
+      "brightest_star": {
+        "name": "",
+        "mag": null
+      },
+      "notable_stars": []
+    },
+    {
+      "iau_code": "CHA",
+      "name_en": "Chamaeleon",
+      "name_ko": "",
+      "hemisphere": "",
+      "best_season_northern": "",
+      "best_months_northern": [],
+      "brightest_star": {
+        "name": "",
+        "mag": null
+      },
+      "notable_stars": []
+    },
+    {
+      "iau_code": "CIR",
+      "name_en": "Circinus",
+      "name_ko": "",
+      "hemisphere": "",
+      "best_season_northern": "",
+      "best_months_northern": [],
+      "brightest_star": {
+        "name": "",
+        "mag": null
+      },
+      "notable_stars": []
+    },
+    {
+      "iau_code": "COL",
+      "name_en": "Columba",
+      "name_ko": "",
+      "hemisphere": "",
+      "best_season_northern": "",
+      "best_months_northern": [],
+      "brightest_star": {
+        "name": "",
+        "mag": null
+      },
+      "notable_stars": []
+    },
+    {
+      "iau_code": "COM",
+      "name_en": "Coma Berenices",
+      "name_ko": "",
+      "hemisphere": "",
+      "best_season_northern": "",
+      "best_months_northern": [],
+      "brightest_star": {
+        "name": "",
+        "mag": null
+      },
+      "notable_stars": []
+    },
+    {
+      "iau_code": "CRA",
+      "name_en": "Corona Australis",
+      "name_ko": "",
+      "hemisphere": "",
+      "best_season_northern": "",
+      "best_months_northern": [],
+      "brightest_star": {
+        "name": "",
+        "mag": null
+      },
+      "notable_stars": []
+    },
+    {
+      "iau_code": "CRB",
+      "name_en": "Corona Borealis",
+      "name_ko": "",
+      "hemisphere": "",
+      "best_season_northern": "",
+      "best_months_northern": [],
+      "brightest_star": {
+        "name": "",
+        "mag": null
+      },
+      "notable_stars": []
+    },
+    {
+      "iau_code": "CRV",
+      "name_en": "Corvus",
+      "name_ko": "",
+      "hemisphere": "",
+      "best_season_northern": "",
+      "best_months_northern": [],
+      "brightest_star": {
+        "name": "",
+        "mag": null
+      },
+      "notable_stars": []
+    },
+    {
+      "iau_code": "CRT",
+      "name_en": "Crater",
+      "name_ko": "",
+      "hemisphere": "",
+      "best_season_northern": "",
+      "best_months_northern": [],
+      "brightest_star": {
+        "name": "",
+        "mag": null
+      },
+      "notable_stars": []
+    },
+    {
+      "iau_code": "CRU",
+      "name_en": "Crux",
+      "name_ko": "남십자자리",
+      "hemisphere": "S",
+      "best_season_northern": "spring",
+      "best_months_northern": [
+        4,
+        5,
+        6
+      ],
+      "brightest_star": {
+        "name": "Acrux",
+        "mag": 0.76
+      },
+      "notable_stars": [
+        {
+          "name": "Acrux",
+          "vmag": 0.76
+        }
+      ]
+    },
+    {
+      "iau_code": "CYG",
+      "name_en": "Cygnus",
+      "name_ko": "백조자리",
+      "hemisphere": "N",
+      "best_season_northern": "summer",
+      "best_months_northern": [
+        7,
+        8,
+        9
+      ],
+      "brightest_star": {
+        "name": "Deneb",
+        "mag": 1.25
+      },
+      "notable_stars": [
+        {
+          "name": "Deneb",
+          "vmag": 1.25
+        }
+      ]
+    },
+    {
+      "iau_code": "DEL",
+      "name_en": "Delphinus",
+      "name_ko": "",
+      "hemisphere": "",
+      "best_season_northern": "",
+      "best_months_northern": [],
+      "brightest_star": {
+        "name": "",
+        "mag": null
+      },
+      "notable_stars": []
+    },
+    {
+      "iau_code": "DOR",
+      "name_en": "Dorado",
+      "name_ko": "",
+      "hemisphere": "",
+      "best_season_northern": "",
+      "best_months_northern": [],
+      "brightest_star": {
+        "name": "",
+        "mag": null
+      },
+      "notable_stars": []
+    },
+    {
+      "iau_code": "DRA",
+      "name_en": "Draco",
+      "name_ko": "",
+      "hemisphere": "",
+      "best_season_northern": "",
+      "best_months_northern": [],
+      "brightest_star": {
+        "name": "",
+        "mag": null
+      },
+      "notable_stars": []
+    },
+    {
+      "iau_code": "EQU",
+      "name_en": "Equuleus",
+      "name_ko": "",
+      "hemisphere": "",
+      "best_season_northern": "",
+      "best_months_northern": [],
+      "brightest_star": {
+        "name": "",
+        "mag": null
+      },
+      "notable_stars": []
+    },
+    {
+      "iau_code": "ERI",
+      "name_en": "Eridanus",
+      "name_ko": "",
+      "hemisphere": "",
+      "best_season_northern": "",
+      "best_months_northern": [],
+      "brightest_star": {
+        "name": "",
+        "mag": null
+      },
+      "notable_stars": []
+    },
+    {
+      "iau_code": "FOR",
+      "name_en": "Fornax",
+      "name_ko": "",
+      "hemisphere": "",
+      "best_season_northern": "",
+      "best_months_northern": [],
+      "brightest_star": {
+        "name": "",
+        "mag": null
+      },
+      "notable_stars": []
+    },
+    {
+      "iau_code": "GEM",
+      "name_en": "Gemini",
+      "name_ko": "쌍둥이자리",
+      "hemisphere": "N",
+      "best_season_northern": "winter",
+      "best_months_northern": [
+        1,
+        2,
+        3
+      ],
+      "brightest_star": {
+        "name": "Pollux",
+        "mag": 1.14
+      },
+      "notable_stars": [
+        {
+          "name": "Pollux",
+          "vmag": 1.14
+        },
+        {
+          "name": "Castor",
+          "vmag": 1.58
+        }
+      ]
+    },
+    {
+      "iau_code": "GRU",
+      "name_en": "Grus",
+      "name_ko": "",
+      "hemisphere": "",
+      "best_season_northern": "",
+      "best_months_northern": [],
+      "brightest_star": {
+        "name": "",
+        "mag": null
+      },
+      "notable_stars": []
+    },
+    {
+      "iau_code": "HER",
+      "name_en": "Hercules",
+      "name_ko": "",
+      "hemisphere": "",
+      "best_season_northern": "",
+      "best_months_northern": [],
+      "brightest_star": {
+        "name": "",
+        "mag": null
+      },
+      "notable_stars": []
+    },
+    {
+      "iau_code": "HOR",
+      "name_en": "Horologium",
+      "name_ko": "",
+      "hemisphere": "",
+      "best_season_northern": "",
+      "best_months_northern": [],
+      "brightest_star": {
+        "name": "",
+        "mag": null
+      },
+      "notable_stars": []
+    },
+    {
+      "iau_code": "HYA",
+      "name_en": "Hydra",
+      "name_ko": "",
+      "hemisphere": "",
+      "best_season_northern": "",
+      "best_months_northern": [],
+      "brightest_star": {
+        "name": "",
+        "mag": null
+      },
+      "notable_stars": []
+    },
+    {
+      "iau_code": "HYI",
+      "name_en": "Hydrus",
+      "name_ko": "",
+      "hemisphere": "",
+      "best_season_northern": "",
+      "best_months_northern": [],
+      "brightest_star": {
+        "name": "",
+        "mag": null
+      },
+      "notable_stars": []
+    },
+    {
+      "iau_code": "IND",
+      "name_en": "Indus",
+      "name_ko": "",
+      "hemisphere": "",
+      "best_season_northern": "",
+      "best_months_northern": [],
+      "brightest_star": {
+        "name": "",
+        "mag": null
+      },
+      "notable_stars": []
+    },
+    {
+      "iau_code": "LAC",
+      "name_en": "Lacerta",
+      "name_ko": "",
+      "hemisphere": "",
+      "best_season_northern": "",
+      "best_months_northern": [],
+      "brightest_star": {
+        "name": "",
+        "mag": null
+      },
+      "notable_stars": []
+    },
+    {
+      "iau_code": "LEO",
+      "name_en": "Leo",
+      "name_ko": "사자자리",
+      "hemisphere": "N",
+      "best_season_northern": "spring",
+      "best_months_northern": [
+        3,
+        4,
+        5
+      ],
+      "brightest_star": {
+        "name": "Regulus",
+        "mag": 1.35
+      },
+      "notable_stars": [
+        {
+          "name": "Regulus",
+          "vmag": 1.35
+        }
+      ]
+    },
+    {
+      "iau_code": "LMI",
+      "name_en": "Leo Minor",
+      "name_ko": "",
+      "hemisphere": "",
+      "best_season_northern": "",
+      "best_months_northern": [],
+      "brightest_star": {
+        "name": "",
+        "mag": null
+      },
+      "notable_stars": []
+    },
+    {
+      "iau_code": "LEP",
+      "name_en": "Lepus",
+      "name_ko": "",
+      "hemisphere": "",
+      "best_season_northern": "",
+      "best_months_northern": [],
+      "brightest_star": {
+        "name": "",
+        "mag": null
+      },
+      "notable_stars": []
+    },
+    {
+      "iau_code": "LIB",
+      "name_en": "Libra",
+      "name_ko": "",
+      "hemisphere": "",
+      "best_season_northern": "",
+      "best_months_northern": [],
+      "brightest_star": {
+        "name": "",
+        "mag": null
+      },
+      "notable_stars": []
+    },
+    {
+      "iau_code": "LUP",
+      "name_en": "Lupus",
+      "name_ko": "",
+      "hemisphere": "",
+      "best_season_northern": "",
+      "best_months_northern": [],
+      "brightest_star": {
+        "name": "",
+        "mag": null
+      },
+      "notable_stars": []
+    },
+    {
+      "iau_code": "LYN",
+      "name_en": "Lynx",
+      "name_ko": "",
+      "hemisphere": "",
+      "best_season_northern": "",
+      "best_months_northern": [],
+      "brightest_star": {
+        "name": "",
+        "mag": null
+      },
+      "notable_stars": []
+    },
+    {
+      "iau_code": "LYR",
+      "name_en": "Lyra",
+      "name_ko": "거문고자리",
+      "hemisphere": "N",
+      "best_season_northern": "summer",
+      "best_months_northern": [
+        7,
+        8,
+        9
+      ],
+      "brightest_star": {
+        "name": "Vega",
+        "mag": 0.03
+      },
+      "notable_stars": [
+        {
+          "name": "Vega",
+          "vmag": 0.03
+        }
+      ]
+    },
+    {
+      "iau_code": "MEN",
+      "name_en": "Mensa",
+      "name_ko": "",
+      "hemisphere": "",
+      "best_season_northern": "",
+      "best_months_northern": [],
+      "brightest_star": {
+        "name": "",
+        "mag": null
+      },
+      "notable_stars": []
+    },
+    {
+      "iau_code": "MIC",
+      "name_en": "Microscopium",
+      "name_ko": "",
+      "hemisphere": "",
+      "best_season_northern": "",
+      "best_months_northern": [],
+      "brightest_star": {
+        "name": "",
+        "mag": null
+      },
+      "notable_stars": []
+    },
+    {
+      "iau_code": "MON",
+      "name_en": "Monoceros",
+      "name_ko": "",
+      "hemisphere": "",
+      "best_season_northern": "",
+      "best_months_northern": [],
+      "brightest_star": {
+        "name": "",
+        "mag": null
+      },
+      "notable_stars": []
+    },
+    {
+      "iau_code": "MUS",
+      "name_en": "Musca",
+      "name_ko": "",
+      "hemisphere": "",
+      "best_season_northern": "",
+      "best_months_northern": [],
+      "brightest_star": {
+        "name": "",
+        "mag": null
+      },
+      "notable_stars": []
+    },
+    {
+      "iau_code": "NOR",
+      "name_en": "Norma",
+      "name_ko": "",
+      "hemisphere": "",
+      "best_season_northern": "",
+      "best_months_northern": [],
+      "brightest_star": {
+        "name": "",
+        "mag": null
+      },
+      "notable_stars": []
+    },
+    {
+      "iau_code": "OCT",
+      "name_en": "Octans",
+      "name_ko": "",
+      "hemisphere": "",
+      "best_season_northern": "",
+      "best_months_northern": [],
+      "brightest_star": {
+        "name": "",
+        "mag": null
+      },
+      "notable_stars": []
+    },
+    {
+      "iau_code": "OPH",
+      "name_en": "Ophiuchus",
+      "name_ko": "",
+      "hemisphere": "",
+      "best_season_northern": "",
+      "best_months_northern": [],
+      "brightest_star": {
+        "name": "",
+        "mag": null
+      },
+      "notable_stars": []
+    },
+    {
+      "iau_code": "ORI",
+      "name_en": "Orion",
+      "name_ko": "오리온자리",
+      "hemisphere": "N",
+      "best_season_northern": "winter",
+      "best_months_northern": [
+        12,
+        1,
+        2
+      ],
+      "brightest_star": {
+        "name": "Rigel",
+        "mag": 0.12
+      },
+      "notable_stars": [
+        {
+          "name": "Rigel",
+          "vmag": 0.12
+        },
+        {
+          "name": "Betelgeuse",
+          "vmag": 0.42
+        }
+      ]
+    },
+    {
+      "iau_code": "PAV",
+      "name_en": "Pavo",
+      "name_ko": "",
+      "hemisphere": "",
+      "best_season_northern": "",
+      "best_months_northern": [],
+      "brightest_star": {
+        "name": "",
+        "mag": null
+      },
+      "notable_stars": []
+    },
+    {
+      "iau_code": "PEG",
+      "name_en": "Pegasus",
+      "name_ko": "페가수스자리",
+      "hemisphere": "N",
+      "best_season_northern": "autumn",
+      "best_months_northern": [
+        9,
+        10,
+        11
+      ],
+      "brightest_star": {
+        "name": "Enif",
+        "mag": 2.38
+      },
+      "notable_stars": [
+        {
+          "name": "Markab",
+          "vmag": 2.49
+        },
+        {
+          "name": "Enif",
+          "vmag": 2.38
+        }
+      ]
+    },
+    {
+      "iau_code": "PER",
+      "name_en": "Perseus",
+      "name_ko": "",
+      "hemisphere": "",
+      "best_season_northern": "",
+      "best_months_northern": [],
+      "brightest_star": {
+        "name": "",
+        "mag": null
+      },
+      "notable_stars": []
+    },
+    {
+      "iau_code": "PHE",
+      "name_en": "Phoenix",
+      "name_ko": "",
+      "hemisphere": "",
+      "best_season_northern": "",
+      "best_months_northern": [],
+      "brightest_star": {
+        "name": "",
+        "mag": null
+      },
+      "notable_stars": []
+    },
+    {
+      "iau_code": "PIC",
+      "name_en": "Pictor",
+      "name_ko": "",
+      "hemisphere": "",
+      "best_season_northern": "",
+      "best_months_northern": [],
+      "brightest_star": {
+        "name": "",
+        "mag": null
+      },
+      "notable_stars": []
+    },
+    {
+      "iau_code": "PSC",
+      "name_en": "Pisces",
+      "name_ko": "",
+      "hemisphere": "",
+      "best_season_northern": "",
+      "best_months_northern": [],
+      "brightest_star": {
+        "name": "",
+        "mag": null
+      },
+      "notable_stars": []
+    },
+    {
+      "iau_code": "PSA",
+      "name_en": "Piscis Austrinus",
+      "name_ko": "남쪽물고기자리",
+      "hemisphere": "S",
+      "best_season_northern": "autumn",
+      "best_months_northern": [
+        9,
+        10,
+        11
+      ],
+      "brightest_star": {
+        "name": "Fomalhaut",
+        "mag": 1.16
+      },
+      "notable_stars": [
+        {
+          "name": "Fomalhaut",
+          "vmag": 1.16
+        }
+      ]
+    },
+    {
+      "iau_code": "PUP",
+      "name_en": "Puppis",
+      "name_ko": "",
+      "hemisphere": "",
+      "best_season_northern": "",
+      "best_months_northern": [],
+      "brightest_star": {
+        "name": "",
+        "mag": null
+      },
+      "notable_stars": []
+    },
+    {
+      "iau_code": "PYX",
+      "name_en": "Pyxis",
+      "name_ko": "",
+      "hemisphere": "",
+      "best_season_northern": "",
+      "best_months_northern": [],
+      "brightest_star": {
+        "name": "",
+        "mag": null
+      },
+      "notable_stars": []
+    },
+    {
+      "iau_code": "RET",
+      "name_en": "Reticulum",
+      "name_ko": "",
+      "hemisphere": "",
+      "best_season_northern": "",
+      "best_months_northern": [],
+      "brightest_star": {
+        "name": "",
+        "mag": null
+      },
+      "notable_stars": []
+    },
+    {
+      "iau_code": "SGE",
+      "name_en": "Sagitta",
+      "name_ko": "",
+      "hemisphere": "",
+      "best_season_northern": "",
+      "best_months_northern": [],
+      "brightest_star": {
+        "name": "",
+        "mag": null
+      },
+      "notable_stars": []
+    },
+    {
+      "iau_code": "SGR",
+      "name_en": "Sagittarius",
+      "name_ko": "",
+      "hemisphere": "",
+      "best_season_northern": "",
+      "best_months_northern": [],
+      "brightest_star": {
+        "name": "",
+        "mag": null
+      },
+      "notable_stars": []
+    },
+    {
+      "iau_code": "SCO",
+      "name_en": "Scorpius",
+      "name_ko": "전갈자리",
+      "hemisphere": "S",
+      "best_season_northern": "summer",
+      "best_months_northern": [
+        6,
+        7,
+        8
+      ],
+      "brightest_star": {
+        "name": "Antares",
+        "mag": 1.06
+      },
+      "notable_stars": [
+        {
+          "name": "Antares",
+          "vmag": 1.06
+        }
+      ]
+    },
+    {
+      "iau_code": "SCL",
+      "name_en": "Sculptor",
+      "name_ko": "",
+      "hemisphere": "",
+      "best_season_northern": "",
+      "best_months_northern": [],
+      "brightest_star": {
+        "name": "",
+        "mag": null
+      },
+      "notable_stars": []
+    },
+    {
+      "iau_code": "SCT",
+      "name_en": "Scutum",
+      "name_ko": "",
+      "hemisphere": "",
+      "best_season_northern": "",
+      "best_months_northern": [],
+      "brightest_star": {
+        "name": "",
+        "mag": null
+      },
+      "notable_stars": []
+    },
+    {
+      "iau_code": "SER",
+      "name_en": "Serpens",
+      "name_ko": "",
+      "hemisphere": "",
+      "best_season_northern": "",
+      "best_months_northern": [],
+      "brightest_star": {
+        "name": "",
+        "mag": null
+      },
+      "notable_stars": []
+    },
+    {
+      "iau_code": "SEX",
+      "name_en": "Sextans",
+      "name_ko": "",
+      "hemisphere": "",
+      "best_season_northern": "",
+      "best_months_northern": [],
+      "brightest_star": {
+        "name": "",
+        "mag": null
+      },
+      "notable_stars": []
+    },
+    {
+      "iau_code": "TAU",
+      "name_en": "Taurus",
+      "name_ko": "황소자리",
+      "hemisphere": "N",
+      "best_season_northern": "winter",
+      "best_months_northern": [
+        11,
+        12,
+        1
+      ],
+      "brightest_star": {
+        "name": "Aldebaran",
+        "mag": 0.85
+      },
+      "notable_stars": [
+        {
+          "name": "Aldebaran",
+          "vmag": 0.85
+        }
+      ]
+    },
+    {
+      "iau_code": "TEL",
+      "name_en": "Telescopium",
+      "name_ko": "",
+      "hemisphere": "",
+      "best_season_northern": "",
+      "best_months_northern": [],
+      "brightest_star": {
+        "name": "",
+        "mag": null
+      },
+      "notable_stars": []
+    },
+    {
+      "iau_code": "TRI",
+      "name_en": "Triangulum",
+      "name_ko": "",
+      "hemisphere": "",
+      "best_season_northern": "",
+      "best_months_northern": [],
+      "brightest_star": {
+        "name": "",
+        "mag": null
+      },
+      "notable_stars": []
+    },
+    {
+      "iau_code": "TRA",
+      "name_en": "Triangulum Australe",
+      "name_ko": "",
+      "hemisphere": "",
+      "best_season_northern": "",
+      "best_months_northern": [],
+      "brightest_star": {
+        "name": "",
+        "mag": null
+      },
+      "notable_stars": []
+    },
+    {
+      "iau_code": "TUC",
+      "name_en": "Tucana",
+      "name_ko": "",
+      "hemisphere": "",
+      "best_season_northern": "",
+      "best_months_northern": [],
+      "brightest_star": {
+        "name": "",
+        "mag": null
+      },
+      "notable_stars": []
+    },
+    {
+      "iau_code": "UMA",
+      "name_en": "Ursa Major",
+      "name_ko": "큰곰자리",
+      "hemisphere": "N",
+      "best_season_northern": "year-round",
+      "best_months_northern": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "brightest_star": {
+        "name": "Alioth",
+        "mag": 1.76
+      },
+      "notable_stars": [
+        {
+          "name": "Dubhe",
+          "vmag": 1.79
+        },
+        {
+          "name": "Alioth",
+          "vmag": 1.76
+        }
+      ]
+    },
+    {
+      "iau_code": "UMI",
+      "name_en": "Ursa Minor",
+      "name_ko": "작은곰자리",
+      "hemisphere": "N",
+      "best_season_northern": "year-round",
+      "best_months_northern": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "brightest_star": {
+        "name": "Polaris",
+        "mag": 1.98
+      },
+      "notable_stars": [
+        {
+          "name": "Polaris",
+          "vmag": 1.98
+        }
+      ]
+    },
+    {
+      "iau_code": "VEL",
+      "name_en": "Vela",
+      "name_ko": "",
+      "hemisphere": "",
+      "best_season_northern": "",
+      "best_months_northern": [],
+      "brightest_star": {
+        "name": "",
+        "mag": null
+      },
+      "notable_stars": []
+    },
+    {
+      "iau_code": "VIR",
+      "name_en": "Virgo",
+      "name_ko": "처녀자리",
+      "hemisphere": "N",
+      "best_season_northern": "spring",
+      "best_months_northern": [
+        4,
+        5
+      ],
+      "brightest_star": {
+        "name": "Spica",
+        "mag": 0.98
+      },
+      "notable_stars": [
+        {
+          "name": "Spica",
+          "vmag": 0.98
+        }
+      ]
+    },
+    {
+      "iau_code": "VOL",
+      "name_en": "Volans",
+      "name_ko": "",
+      "hemisphere": "",
+      "best_season_northern": "",
+      "best_months_northern": [],
+      "brightest_star": {
+        "name": "",
+        "mag": null
+      },
+      "notable_stars": []
+    },
+    {
+      "iau_code": "VUL",
+      "name_en": "Vulpecula",
+      "name_ko": "",
+      "hemisphere": "",
+      "best_season_northern": "",
+      "best_months_northern": [],
+      "brightest_star": {
+        "name": "",
+        "mag": null
+      },
+      "notable_stars": []
+    }
+  ]
+}

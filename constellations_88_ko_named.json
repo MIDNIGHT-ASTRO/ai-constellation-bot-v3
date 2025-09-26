@@ -1,0 +1,271 @@
+{
+  "constellations": [
+    { "name_en": "Andromeda", "name_ko": "안드로메다자리", "hemisphere": "N", "best_season_northern": "autumn",
+      "notable_stars": [ {"name":"Alpheratz","name_ko":"알페라츠"}, {"name":"Almach","name_ko":"알마크"} ] },
+
+    { "name_en": "Antlia", "name_ko": "공기펌프자리", "hemisphere": "S", "best_season_northern": "spring",
+      "notable_stars": [] },
+
+    { "name_en": "Apus", "name_ko": "무발조자리", "hemisphere": "S", "best_season_northern": "summer",
+      "notable_stars": [] },
+
+    { "name_en": "Aquarius", "name_ko": "물병자리", "hemisphere": "E", "best_season_northern": "autumn",
+      "notable_stars": [ {"name":"Sadalmelik","name_ko":"사달멜리크"}, {"name":"Sadalsuud","name_ko":"사달수드"} ] },
+
+    { "name_en": "Aquila", "name_ko": "독수리자리", "hemisphere": "E", "best_season_northern": "summer",
+      "notable_stars": [ {"name":"Altair","name_ko":"알타이르"} ] },
+
+    { "name_en": "Ara", "name_ko": "제단자리", "hemisphere": "S", "best_season_northern": "summer",
+      "notable_stars": [] },
+
+    { "name_en": "Aries", "name_ko": "양자리", "hemisphere": "N", "best_season_northern": "autumn",
+      "notable_stars": [ {"name":"Hamal","name_ko":"하말"} ] },
+
+    { "name_en": "Auriga", "name_ko": "마차부자리", "hemisphere": "N", "best_season_northern": "winter",
+      "notable_stars": [ {"name":"Capella","name_ko":"카펠라"} ] },
+
+    { "name_en": "Bootes", "name_ko": "목동자리", "hemisphere": "N", "best_season_northern": "spring",
+      "notable_stars": [ {"name":"Arcturus","name_ko":"아크투루스"} ] },
+
+    { "name_en": "Caelum", "name_ko": "조각칼자리", "hemisphere": "S", "best_season_northern": "winter",
+      "notable_stars": [] },
+
+    { "name_en": "Camelopardalis", "name_ko": "기린자리", "hemisphere": "N", "best_season_northern": "year-round",
+      "notable_stars": [] },
+
+    { "name_en": "Cancer", "name_ko": "게자리", "hemisphere": "N", "best_season_northern": "spring",
+      "notable_stars": [ {"name":"Acubens","name_ko":"아쿠벤스"} ] },
+
+    { "name_en": "Canes Venatici", "name_ko": "사냥개자리", "hemisphere": "N", "best_season_northern": "spring",
+      "notable_stars": [ {"name":"Cor Caroli","name_ko":"코르 카롤리"} ] },
+
+    { "name_en": "Canis Major", "name_ko": "큰개자리", "hemisphere": "E", "best_season_northern": "winter",
+      "notable_stars": [ {"name":"Sirius","name_ko":"시리우스"} ] },
+
+    { "name_en": "Canis Minor", "name_ko": "작은개자리", "hemisphere": "E", "best_season_northern": "winter",
+      "notable_stars": [ {"name":"Procyon","name_ko":"프로키온"} ] },
+
+    { "name_en": "Capricornus", "name_ko": "염소자리", "hemisphere": "E", "best_season_northern": "autumn",
+      "notable_stars": [ {"name":"Dabih","name_ko":"다비흐"}, {"name":"Deneb Algedi","name_ko":"데네브 알게디"} ] },
+
+    { "name_en": "Carina", "name_ko": "용골자리", "hemisphere": "S", "best_season_northern": "spring",
+      "notable_stars": [] },
+
+    { "name_en": "Cassiopeia", "name_ko": "카시오페이아자리", "hemisphere": "N", "best_season_northern": "autumn",
+      "notable_stars": [ {"name":"Schedar","name_ko":"셰더"}, {"name":"Caph","name_ko":"카프"} ] },
+
+    { "name_en": "Centaurus", "name_ko": "켄타우루스자리", "hemisphere": "S", "best_season_northern": "spring",
+      "notable_stars": [] },
+
+    { "name_en": "Cepheus", "name_ko": "세페우스자리", "hemisphere": "N", "best_season_northern": "year-round",
+      "notable_stars": [ {"name":"Alderamin","name_ko":"알데라민"} ] },
+
+    { "name_en": "Cetus", "name_ko": "고래자리", "hemisphere": "N", "best_season_northern": "autumn",
+      "notable_stars": [ {"name":"Mira","name_ko":"미라"} ] },
+
+    { "name_en": "Chamaeleon", "name_ko": "카멜레온자리", "hemisphere": "S", "best_season_northern": "spring",
+      "notable_stars": [] },
+
+    { "name_en": "Circinus", "name_ko": "컴퍼스자리", "hemisphere": "S", "best_season_northern": "summer",
+      "notable_stars": [] },
+
+    { "name_en": "Columba", "name_ko": "비둘기자리", "hemisphere": "S", "best_season_northern": "winter",
+      "notable_stars": [] },
+
+    { "name_en": "Coma Berenices", "name_ko": "머리털자리", "hemisphere": "N", "best_season_northern": "spring",
+      "notable_stars": [] },
+
+    { "name_en": "Corona Australis", "name_ko": "남쪽왕관자리", "hemisphere": "S", "best_season_northern": "summer",
+      "notable_stars": [] },
+
+    { "name_en": "Corona Borealis", "name_ko": "북쪽왕관자리", "hemisphere": "N", "best_season_northern": "summer",
+      "notable_stars": [ {"name":"Alphecca","name_ko":"알페카"} ] },
+
+    { "name_en": "Corvus", "name_ko": "까마귀자리", "hemisphere": "N", "best_season_northern": "spring",
+      "notable_stars": [] },
+
+    { "name_en": "Crater", "name_ko": "잔자리", "hemisphere": "N", "best_season_northern": "spring",
+      "notable_stars": [] },
+
+    { "name_en": "Crux", "name_ko": "남십자자리", "hemisphere": "S", "best_season_northern": "spring",
+      "notable_stars": [] },
+
+    { "name_en": "Cygnus", "name_ko": "백조자리", "hemisphere": "N", "best_season_northern": "summer",
+      "notable_stars": [ {"name":"Deneb","name_ko":"데네브"}, {"name":"Sadr","name_ko":"사드르"}, {"name":"Albireo","name_ko":"알비레오"} ] },
+
+    { "name_en": "Delphinus", "name_ko": "돌고래자리", "hemisphere": "N", "best_season_northern": "summer",
+      "notable_stars": [ {"name":"Sualocin","name_ko":"수알로신"}, {"name":"Rotanev","name_ko":"로타네브"} ] },
+
+    { "name_en": "Dorado", "name_ko": "황소고기자리", "hemisphere": "S", "best_season_northern": "winter",
+      "notable_stars": [] },
+
+    { "name_en": "Draco", "name_ko": "용자리", "hemisphere": "N", "best_season_northern": "year-round",
+      "notable_stars": [ {"name":"Eltanin","name_ko":"엘타닌"}, {"name":"Thuban","name_ko":"투반"} ] },
+
+    { "name_en": "Equuleus", "name_ko": "조랑말자리", "hemisphere": "N", "best_season_northern": "autumn",
+      "notable_stars": [] },
+
+    { "name_en": "Eridanus", "name_ko": "에리다누스자리", "hemisphere": "S", "best_season_northern": "autumn",
+      "notable_stars": [] },
+
+    { "name_en": "Fornax", "name_ko": "화로자리", "hemisphere": "S", "best_season_northern": "autumn",
+      "notable_stars": [] },
+
+    { "name_en": "Gemini", "name_ko": "쌍둥이자리", "hemisphere": "N", "best_season_northern": "winter",
+      "notable_stars": [ {"name":"Castor","name_ko":"카스토르"}, {"name":"Pollux","name_ko":"폴룩스"} ] },
+
+    { "name_en": "Grus", "name_ko": "학자리", "hemisphere": "S", "best_season_northern": "autumn",
+      "notable_stars": [] },
+
+    { "name_en": "Hercules", "name_ko": "헤르쿨레스자리", "hemisphere": "N", "best_season_northern": "summer",
+      "notable_stars": [ {"name":"Rasalgethi","name_ko":"라살게티"} ] },
+
+    { "name_en": "Horologium", "name_ko": "시계자리", "hemisphere": "S", "best_season_northern": "autumn",
+      "notable_stars": [] },
+
+    { "name_en": "Hydra", "name_ko": "바다뱀자리", "hemisphere": "E", "best_season_northern": "spring",
+      "notable_stars": [ {"name":"Alphard","name_ko":"알파르드"} ] },
+
+    { "name_en": "Hydrus", "name_ko": "물뱀자리", "hemisphere": "S", "best_season_northern": "autumn",
+      "notable_stars": [] },
+
+    { "name_en": "Indus", "name_ko": "인디언자리", "hemisphere": "S", "best_season_northern": "autumn",
+      "notable_stars": [] },
+
+    { "name_en": "Lacerta", "name_ko": "도마뱀자리", "hemisphere": "N", "best_season_northern": "autumn",
+      "notable_stars": [] },
+
+    { "name_en": "Leo", "name_ko": "사자자리", "hemisphere": "N", "best_season_northern": "spring",
+      "notable_stars": [ {"name":"Regulus","name_ko":"레굴루스"}, {"name":"Denebola","name_ko":"데네볼라"} ] },
+
+    { "name_en": "Leo Minor", "name_ko": "작은사자자리", "hemisphere": "N", "best_season_northern": "spring",
+      "notable_stars": [] },
+
+    { "name_en": "Lepus", "name_ko": "토끼자리", "hemisphere": "N", "best_season_northern": "winter",
+      "notable_stars": [ {"name":"Arneb","name_ko":"아르네브"} ] },
+
+    { "name_en": "Libra", "name_ko": "천칭자리", "hemisphere": "E", "best_season_northern": "summer",
+      "notable_stars": [ {"name":"Zubenelgenubi","name_ko":"주벤엘게누비"}, {"name":"Zubeneschamali","name_ko":"주벤에샤말리"} ] },
+
+    { "name_en": "Lupus", "name_ko": "이리자리", "hemisphere": "S", "best_season_northern": "summer",
+      "notable_stars": [] },
+
+    { "name_en": "Lynx", "name_ko": "살쾡이자리", "hemisphere": "N", "best_season_northern": "spring",
+      "notable_stars": [] },
+
+    { "name_en": "Lyra", "name_ko": "거문고자리", "hemisphere": "N", "best_season_northern": "summer",
+      "notable_stars": [ {"name":"Vega","name_ko":"베가"} ] },
+
+    { "name_en": "Mensa", "name_ko": "테이블산자리", "hemisphere": "S", "best_season_northern": "summer",
+      "notable_stars": [] },
+
+    { "name_en": "Microscopium", "name_ko": "현미경자리", "hemisphere": "S", "best_season_northern": "autumn",
+      "notable_stars": [] },
+
+    { "name_en": "Monoceros", "name_ko": "외뿔소자리", "hemisphere": "E", "best_season_northern": "winter",
+      "notable_stars": [] },
+
+    { "name_en": "Musca", "name_ko": "파리자리", "hemisphere": "S", "best_season_northern": "spring",
+      "notable_stars": [] },
+
+    { "name_en": "Norma", "name_ko": "자루자리", "hemisphere": "S", "best_season_northern": "summer",
+      "notable_stars": [] },
+
+    { "name_en": "Octans", "name_ko": "팔분의자리", "hemisphere": "S", "best_season_northern": "year-round",
+      "notable_stars": [] },
+
+    { "name_en": "Ophiuchus", "name_ko": "땅꾼자리", "hemisphere": "E", "best_season_northern": "summer",
+      "notable_stars": [ {"name":"Rasalhague","name_ko":"라살하기"} ] },
+
+    { "name_en": "Orion", "name_ko": "오리온자리", "hemisphere": "E", "best_season_northern": "winter",
+      "notable_stars": [ {"name":"Betelgeuse","name_ko":"베텔게우스"}, {"name":"Rigel","name_ko":"리겔"}, {"name":"Bellatrix","name_ko":"벨라트릭스"} ] },
+
+    { "name_en": "Pavo", "name_ko": "공작자리", "hemisphere": "S", "best_season_northern": "summer",
+      "notable_stars": [] },
+
+    { "name_en": "Pegasus", "name_ko": "페가수스자리", "hemisphere": "N", "best_season_northern": "autumn",
+      "notable_stars": [ {"name":"Enif","name_ko":"애니프"}, {"name":"Algenib","name_ko":"알게니브"}, {"name":"Markab","name_ko":"마르카브"} ] },
+
+    { "name_en": "Perseus", "name_ko": "페르세우스자리", "hemisphere": "N", "best_season_northern": "autumn",
+      "notable_stars": [ {"name":"Algol","name_ko":"알골"}, {"name":"Mirfak","name_ko":"미르팍"} ] },
+
+    { "name_en": "Phoenix", "name_ko": "불사조자리", "hemisphere": "S", "best_season_northern": "autumn",
+      "notable_stars": [] },
+
+    { "name_en": "Pictor", "name_ko": "화가자리", "hemisphere": "S", "best_season_northern": "winter",
+      "notable_stars": [] },
+
+    { "name_en": "Pisces", "name_ko": "물고기자리", "hemisphere": "E", "best_season_northern": "autumn",
+      "notable_stars": [ {"name":"Alrescha","name_ko":"알레샤"} ] },
+
+    { "name_en": "Piscis Austrinus", "name_ko": "남쪽물고기자리", "hemisphere": "S", "best_season_northern": "autumn",
+      "notable_stars": [] },
+
+    { "name_en": "Puppis", "name_ko": "고물자리", "hemisphere": "S", "best_season_northern": "spring",
+      "notable_stars": [] },
+
+    { "name_en": "Pyxis", "name_ko": "나침반자리", "hemisphere": "S", "best_season_northern": "spring",
+      "notable_stars": [] },
+
+    { "name_en": "Reticulum", "name_ko": "그물자리", "hemisphere": "S", "best_season_northern": "summer",
+      "notable_stars": [] },
+
+    { "name_en": "Sagitta", "name_ko": "화살자리", "hemisphere": "N", "best_season_northern": "summer",
+      "notable_stars": [] },
+
+    { "name_en": "Sagittarius", "name_ko": "사수자리", "hemisphere": "S", "best_season_northern": "summer",
+      "notable_stars": [] },
+
+    { "name_en": "Scorpius", "name_ko": "전갈자리", "hemisphere": "S", "best_season_northern": "summer",
+      "notable_stars": [] },
+
+    { "name_en": "Sculptor", "name_ko": "조각가자리", "hemisphere": "S", "best_season_northern": "autumn",
+      "notable_stars": [] },
+
+    { "name_en": "Scutum", "name_ko": "방패자리", "hemisphere": "N", "best_season_northern": "summer",
+      "notable_stars": [] },
+
+    { "name_en": "Serpens", "name_ko": "뱀자리", "hemisphere": "E", "best_season_northern": "summer",
+      "notable_stars": [ {"name":"Unukalhai","name_ko":"우누칼하이"} ] },
+
+    { "name_en": "Sextans", "name_ko": "육분의자리", "hemisphere": "N", "best_season_northern": "spring",
+      "notable_stars": [] },
+
+    { "name_en": "Taurus", "name_ko": "황소자리", "hemisphere": "N", "best_season_northern": "winter",
+      "notable_stars": [ {"name":"Aldebaran","name_ko":"알데바란"}, {"name":"Elnath","name_ko":"엘나스"} ] },
+
+    { "name_en": "Telescopium", "name_ko": "망원경자리", "hemisphere": "S", "best_season_northern": "summer",
+      "notable_stars": [] },
+
+    { "name_en": "Triangulum", "name_ko": "삼각형자리", "hemisphere": "N", "best_season_northern": "autumn",
+      "notable_stars": [] },
+
+    { "name_en": "Triangulum Australe", "name_ko": "남쪽삼각형자리", "hemisphere": "S", "best_season_northern": "summer",
+      "notable_stars": [] },
+
+    { "name_en": "Tucana", "name_ko": "큰부리새자리", "hemisphere": "S", "best_season_northern": "autumn",
+      "notable_stars": [] },
+
+    { "name_en": "Ursa Major", "name_ko": "큰곰자리", "hemisphere": "N", "best_season_northern": "spring",
+      "notable_stars": [
+        {"name":"Dubhe","name_ko":"두베"}, {"name":"Merak","name_ko":"메라크"}, {"name":"Phecda","name_ko":"페크다"},
+        {"name":"Megrez","name_ko":"메그레즈"}, {"name":"Alioth","name_ko":"알리오트"}, {"name":"Mizar","name_ko":"미자르"},
+        {"name":"Alkaid","name_ko":"알카이드"}, {"name":"Alcor","name_ko":"알코르"}
+      ] },
+
+    { "name_en": "Ursa Minor", "name_ko": "작은곰자리", "hemisphere": "N", "best_season_northern": "year-round",
+      "notable_stars": [ {"name":"Polaris","name_ko":"폴라리스"} ] },
+
+    { "name_en": "Vela", "name_ko": "돛자리", "hemisphere": "S", "best_season_northern": "spring",
+      "notable_stars": [] },
+
+    { "name_en": "Virgo", "name_ko": "처녀자리", "hemisphere": "N", "best_season_northern": "spring",
+      "notable_stars": [ {"name":"Spica","name_ko":"스피카"} ] },
+
+    { "name_en": "Volans", "name_ko": "날치자리", "hemisphere": "S", "best_season_northern": "spring",
+      "notable_stars": [] },
+
+    { "name_en": "Vulpecula", "name_ko": "여우자리", "hemisphere": "N", "best_season_northern": "summer",
+      "notable_stars": [] }
+  ]
+}

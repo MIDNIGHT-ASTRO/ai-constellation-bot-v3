@@ -1,0 +1,4 @@
+Constellation charts © International Astronomical Union (IAU) / Sky & Telescope.
+Charts produced by Roger Sinnott and Rick Fienberg; figure lines after Alan MacRobert.
+J2000 epoch. Licensed under Creative Commons Attribution 4.0 International (CC BY 4.0).
+Source: https://iauarchive.eso.org/public/themes/constellations/
