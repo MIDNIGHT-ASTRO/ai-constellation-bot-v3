@@ -11,7 +11,6 @@
     * { box-sizing: border-box; }
     body { margin: 0; font-family: -apple-system, system-ui, Segoe UI, Roboto, 'Noto Sans KR', sans-serif; background: var(--bg); color: var(--fg); }
 
-    /* 레이아웃 */
     header {
       position: sticky; top: 0; z-index: 10;
       background: rgba(246,247,251,.85); backdrop-filter: blur(8px);
@@ -22,17 +21,13 @@
     .space { flex: 1; }
     .hint { color: var(--muted); font-size: 12px; }
 
-    /* 버튼 */
-    button {
-      appearance: none; border:1px solid var(--line); background: var(--btn);
-      padding:10px 14px; border-radius: 12px; cursor:pointer;
-    }
+    button { appearance: none; border:1px solid var(--line); background: var(--btn);
+      padding:10px 14px; border-radius: 12px; cursor:pointer; }
     button.primary { background: var(--primary); color:#fff; border:none; }
     button.ghost { background:transparent; }
     button:disabled { opacity: .6; cursor: not-allowed; }
     .seg { display:flex; gap:6px; flex-wrap:wrap; }
 
-    /* 카드 */
     main { padding: 22px 16px 10px; }
     .card {
       margin: 0 auto; max-width: 880px; background: var(--card);
@@ -72,44 +67,19 @@
     .badge.ok { color:#047857; border-color:#34d399; }
     .badge.fail { color:#b91c1c; border-color:#f87171; }
 
-    /* 로고(퀴즈 박스 하단) */
-    .brand {
-      max-width: 980px; margin: 10px auto 0; text-align:center;
-    }
-    .brand img {
-      max-width: 260px; width: 60%;
-      height: auto; opacity: .95;
-      filter: drop-shadow(0 2px 6px rgba(0,0,0,.08));
-    }
+    .brand { max-width: 980px; margin: 10px auto 0; text-align:center; }
+    .brand img { max-width: 130px; width: 30%; height: auto; opacity: .95;
+      filter: drop-shadow(0 2px 6px rgba(0,0,0,.08)); }
 
-    /* 푸터 크레딧 */
-    .credit {
-      margin: 16px auto 24px;
-      padding: 12px;
-      text-align: center;
-      font-size: 12px;
-      line-height: 1.6;
-      color: #6b7280;
-      max-width: 980px;
-    }
-    .credit .yt {
-      display: inline-block;
-      margin-top: 6px;
-      font-weight: 600;
-      color: #1d4ed8;
-      text-decoration: none;
-    }
+    .credit { margin: 16px auto 24px; padding: 12px; text-align: center;
+      font-size: 12px; line-height: 1.6; color: #6b7280; max-width: 980px; }
+    .credit .yt { display: inline-block; margin-top: 6px; font-weight: 600;
+      color: #1d4ed8; text-decoration: none; }
     .credit .yt:hover { text-decoration: underline; }
-    .credit .warn {
-      display: block;
-      margin-top: 12px;
-      font-size: 11px;
-      color: #b91c1c;
-    }
+    .credit .warn { display: block; margin-top: 12px; font-size: 11px; color: #b91c1c; }
   </style>
 </head>
 <body>
-  <!-- 헤더: 모드 선택 -->
   <header>
     <div class="wrap row">
       <div style="font-weight:800;">미드나잇의 천문 퀴즈 (with. AI)</div>
@@ -130,20 +100,18 @@
     </div>
   </header>
 
-  <!-- 본문: 단일 카드에서 문제 표시 -->
   <main>
     <div id="card" class="card" aria-live="polite">
       <div class="qtitle">시작하려면 위에서 퀴즈 유형을 선택하세요.</div>
       <div class="qmeta">성도(이미지) 퀴즈에서는 그림을 클릭하면 크게/작게 볼 수 있습니다.</div>
     </div>
 
-    <!-- 로고: 퀴즈 박스 하단 중앙, 작게 -->
     <div class="brand">
+      <!-- 프로젝트 내 정적 파일 경로에 맞춰 저장: public/brand/midnight_logo.png -->
       <img src="/public/brand/midnight_logo.png" alt="MIDNIGHT brand">
     </div>
   </main>
 
-  <!-- 제작 크레딧(상시) -->
   <footer class="credit">
     이 AI 챗봇은 미드나잇의 기획과 ChatGPT의 AI 제작 지원으로 만들어졌습니다.<br>
     별자리·태양계 데이터는 IAU(국제천문연맹), Sky & Telescope, Stellarium, HYG Database 등의 공개 자료를 기반으로 활용했습니다.<br><br>
@@ -180,24 +148,36 @@
       }
     })();
 
-    // 서버에서 문제 가져오기
+    // 퀴즈 가져오기 (에러를 카드에 표시)
     async function fetchQuiz(mode) {
+      const m = mode || 'random';
       try {
         const r = await fetch('/chat', {
-          method:'POST', headers:{'Content-Type':'application/json'},
-          body: JSON.stringify({ mode })
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({ mode: m })
         });
-        if (!r.ok) throw new Error('server not ok');
+        if (!r.ok) {
+          const text = await r.text();
+          throw new Error(`HTTP ${r.status} /chat → ${text}`);
+        }
         const resp = await r.json();
-        if (resp?.type !== 'quiz' || !resp?.data) throw new Error('invalid payload');
+        if (resp?.type !== 'quiz' || !resp?.data) {
+          throw new Error('Invalid payload from /chat');
+        }
         return resp.data;
       } catch (e) {
+        const $card = document.getElementById('card');
+        $card.innerHTML = `
+          <div class="qtitle">문제 불러오기에 실패했어요.</div>
+          <div class="qmeta" style="color:#b91c1c;">${e.message}</div>
+          <div class="hint" style="margin-top:8px;">잠시 후 다시 시도하거나, Render Logs를 확인해 주세요.</div>
+        `;
         console.warn(e);
         return null;
       }
     }
 
-    // 카드 렌더
     const $card = document.getElementById('card');
     let current = null, currentMode = 'random';
 

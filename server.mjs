@@ -1,146 +1,272 @@
-// server.mjs
-import express from "express";
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>미드나잇의 천문 퀴즈 (with. AI)</title>
+  <style>
+    :root { --fg:#0f172a; --muted:#6b7280; --bg:#f6f7fb; --card:#fff; --line:#e5e7eb;
+            --primary:#111827; --ok:#16a34a; --bad:#dc2626; --btn:#fff; }
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: -apple-system, system-ui, Segoe UI, Roboto, 'Noto Sans KR', sans-serif; background: var(--bg); color: var(--fg); }
 
-const app = express();
-const PORT = process.env.PORT || 3000;
+    header {
+      position: sticky; top: 0; z-index: 10;
+      background: rgba(246,247,251,.85); backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--line);
+    }
+    .wrap { max-width: 980px; margin: 0 auto; padding: 14px 16px; }
+    .row { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+    .space { flex: 1; }
+    .hint { color: var(--muted); font-size: 12px; }
 
-app.use(express.json());
+    button { appearance: none; border:1px solid var(--line); background: var(--btn);
+      padding:10px 14px; border-radius: 12px; cursor:pointer; }
+    button.primary { background: var(--primary); color:#fff; border:none; }
+    button.ghost { background:transparent; }
+    button:disabled { opacity: .6; cursor: not-allowed; }
+    .seg { display:flex; gap:6px; flex-wrap:wrap; }
 
-// ------------------ 데이터 로드 ------------------ //
-function loadJSON(file) {
-  return JSON.parse(fs.readFileSync(path.join(__dirname, file), "utf-8"));
-}
+    main { padding: 22px 16px 10px; }
+    .card {
+      margin: 0 auto; max-width: 880px; background: var(--card);
+      border-radius: 16px; box-shadow: 0 8px 24px rgba(0,0,0,.06);
+      border:1px solid var(--line); padding: 18px;
+      animation: fadeIn .28s ease;
+    }
+    @keyframes fadeIn { from { opacity:0; transform: translateY(8px); } to { opacity:1; transform:none; } }
 
-const constellations = loadJSON("constellations_88_ko_named.json"); // 88개 별자리
-const solarSystem = loadJSON("solar_system.json"); // 태양계/달 문제
+    .qtitle { font-size: 18px; font-weight: 700; line-height: 1.35; }
+    .qmeta { margin-top: 6px; font-size: 12px; color: var(--muted); }
+    .qimg-wrap { margin: 10px 0 6px; display:flex; justify-content:center; }
+    .qimg {
+      max-width:100%; height:auto; max-height: 42vh; object-fit: contain;
+      border:1px solid var(--line); border-radius:8px; background:#fff; cursor: zoom-in;
+    }
+    .qimg.lg { max-height: 86vh; cursor: zoom-out; }
+    @media (max-width: 640px) { .qimg { max-height: 52vh; } }
 
-// ------------------ 퀴즈 생성기 ------------------ //
+    .opts { display:grid; gap:10px; margin-top: 10px; }
+    .opts.cols-2 { grid-template-columns: repeat(2, minmax(0,1fr)); }
+    .opts.cols-1 { grid-template-columns: 1fr; }
+    .opt-btn {
+      padding: 12px; text-align:left; border:1px solid var(--line); border-radius:12px;
+      background:#fff; transition: transform .06s ease, border-color .06s ease;
+    }
+    .opt-btn:hover { transform: translateY(-1px); }
+    .opt-btn.correct { border-color: #86efac; box-shadow: 0 0 0 3px rgba(22,163,74,.15) inset; }
+    .opt-btn.wrong   { border-color: #fca5a5; box-shadow: 0 0 0 3px rgba(220,38,38,.12) inset; }
 
-// 랜덤 퀴즈 하나 선택
-function pickRandom(arr) {
-  return arr[Math.floor(Math.random() * arr.length)];
-}
+    .result { margin-top: 12px; padding: 10px 12px; border-radius:12px; font-weight:600; }
+    .result.ok  { background: #ecfdf5; color:#065f46; }
+    .result.bad { background: #fef2f2; color:#7f1d1d; }
 
-// 계절 퀴즈 (북반구 기준, 남반구 별자리는 제외)
-function makeSeasonQuiz() {
-  const northern = constellations.filter(c => c.hemisphere === "북반구");
-  const c = pickRandom(northern);
-  const seasons = ["봄", "여름", "가을", "겨울"];
-  return {
-    question: `Q) ${c.name_ko}는 북반구 기준 어떤 계절의 별자리일까요?`,
-    choices: seasons,
-    answerIndex: seasons.indexOf(c.season),
-    explanation: `${c.name_ko}는 ${c.season}철에 잘 보이는 별자리입니다.`,
-  };
-}
+    .footer { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:14px; }
+    .badge { border:1px solid var(--line); border-radius: 999px; padding: 4px 10px; font-size: 12px; }
+    .badge.ok { color:#047857; border-color:#34d399; }
+    .badge.fail { color:#b91c1c; border-color:#f87171; }
 
-// 밝은 별 → 별자리 맞추기
-function makeStarQuiz() {
-  const withStars = constellations.filter(c => c.stars && c.stars.length > 0);
-  const c = pickRandom(withStars);
-  const star = pickRandom(c.stars);
-  const wrongs = constellations
-    .filter(x => x.name_ko !== c.name_ko)
-    .slice(0, 3)
-    .map(x => x.name_ko);
-  const options = [c.name_ko, ...wrongs].sort(() => Math.random() - 0.5);
-  return {
-    question: `Q) '${star}' 별은 어느 별자리에 속해 있을까요?`,
-    choices: options,
-    answerIndex: options.indexOf(c.name_ko),
-    explanation: `${star}는 ${c.name_ko}에 속한 별입니다.`,
-  };
-}
+    .brand { max-width: 980px; margin: 10px auto 0; text-align:center; }
+    .brand img { max-width: 260px; width: 60%; height: auto; opacity: .95;
+      filter: drop-shadow(0 2px 6px rgba(0,0,0,.08)); }
 
-// 북/남반구 구분 퀴즈 (2지선다)
-function makeHemisphereQuiz() {
-  const c = pickRandom(constellations);
-  const options = ["북반구", "남반구"];
-  return {
-    question: `Q) ${c.name_ko}는 주로 어느 반구에서 잘 보일까요?`,
-    choices: options,
-    answerIndex: options.indexOf(c.hemisphere),
-    explanation: `${c.name_ko}는 ${c.hemisphere} 별자리입니다.`,
-  };
-}
+    .credit { margin: 16px auto 24px; padding: 12px; text-align: center;
+      font-size: 12px; line-height: 1.6; color: #6b7280; max-width: 980px; }
+    .credit .yt { display: inline-block; margin-top: 6px; font-weight: 600;
+      color: #1d4ed8; text-decoration: none; }
+    .credit .yt:hover { text-decoration: underline; }
+    .credit .warn { display: block; margin-top: 12px; font-size: 11px; color: #b91c1c; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap row">
+      <div style="font-weight:800;">미드나잇의 천문 퀴즈 (with. AI)</div>
+      <div class="space"></div>
+      <div id="health" class="badge fail">서버 연결 확인 중…</div>
+    </div>
+    <div class="wrap">
+      <div class="seg">
+        <button data-mode="random"   class="primary">랜덤</button>
+        <button data-mode="image">성도(이미지)</button>
+        <button data-mode="season">계절</button>
+        <button data-mode="star">밝은 별 소속</button>
+        <button data-mode="hemisphere">북·남반구 구분</button>
+        <button data-mode="lunar">달</button>
+        <button data-mode="solar">태양계</button>
+      </div>
+      <div class="hint" style="margin-top:6px;">문제 유형 버튼을 누르면 화면이 <b>새 문제</b>로 교체됩니다.</div>
+    </div>
+  </header>
 
-// 태양계 퀴즈
-function makeSolarQuiz() {
-  return pickRandom(solarSystem);
-}
+  <main>
+    <div id="card" class="card" aria-live="polite">
+      <div class="qtitle">시작하려면 위에서 퀴즈 유형을 선택하세요.</div>
+      <div class="qmeta">성도(이미지) 퀴즈에서는 그림을 클릭하면 크게/작게 볼 수 있습니다.</div>
+    </div>
 
-// 성도(이미지) 맞추기 퀴즈
-function makeImageQuiz() {
-  const c = pickRandom(constellations);
-  const imagePath = `/public/images/constellations_iau/${c.name_en.toLowerCase()}.svg`;
+    <div class="brand">
+      <!-- 프로젝트 내 정적 파일 경로에 맞춰 저장: public/brand/midnight_logo.png -->
+      <img src="/public/brand/midnight_logo.png" alt="MIDNIGHT brand">
+    </div>
+  </main>
 
-  // 오답 3개 뽑기
-  const wrongs = constellations
-    .filter(x => x.name_ko !== c.name_ko)
-    .sort(() => Math.random() - 0.5)
-    .slice(0, 3)
-    .map(x => x.name_ko);
+  <footer class="credit">
+    이 AI 챗봇은 미드나잇의 기획과 ChatGPT의 AI 제작 지원으로 만들어졌습니다.<br>
+    별자리·태양계 데이터는 IAU(국제천문연맹), Sky & Telescope, Stellarium, HYG Database 등의 공개 자료를 기반으로 활용했습니다.<br><br>
+    This AI chatbot was planned by MIDNIGHT and built with AI support from ChatGPT.<br>
+    Constellation and solar system data are based on public resources from IAU, Sky & Telescope, Stellarium, and the HYG Database.<br><br>
+    <a class="yt" href="https://www.youtube.com/@midnight_astro" target="_blank" rel="noopener">
+      Youtube 미드나잇 천체관측 channel
+    </a><br><br>
+    <span class="warn">
+      © <span id="year"></span> MIDNIGHT · All Rights Reserved.<br><br>
+      ⚠️ 본 AI 챗봇과 그 콘텐츠는 저작권법의 보호를 받습니다.<br>
+      무단 복제, 수정, 배포 및 상업적 이용을 금합니다.<br><br>
+      ⚠️ This AI chatbot and its contents are protected under copyright law.<br>
+      Unauthorized reproduction, modification, distribution, or commercial use is strictly prohibited.
+    </span>
+  </footer>
 
-  const options = [c.name_ko, ...wrongs].sort(() => Math.random() - 0.5);
+  <script>
+    // 연도 자동 반영
+    document.getElementById('year').textContent = new Date().getFullYear();
 
-  return {
-    question: "Q) 다음 성도 이미지는 어떤 별자리일까요?",
-    choices: options,
-    answerIndex: options.indexOf(c.name_ko),
-    explanation: `이 성도는 ${c.name_ko}(${c.name_en}) 자리입니다.`,
-    image: imagePath,
-  };
-}
+    // 서버 상태 체크
+    (async function health() {
+      const $health = document.getElementById('health');
+      try {
+        const r = await fetch('/health', {cache:'no-store'});
+        if (!r.ok) throw new Error();
+        await r.json();
+        $health.textContent = '서버 연결 OK';
+        $health.classList.remove('fail'); $health.classList.add('ok');
+      } catch {
+        $health.textContent = '서버 연결 실패';
+        $health.classList.remove('ok'); $health.classList.add('fail');
+      }
+    })();
 
-// 달 퀴즈 (solar_system.json 안에 포함됨)
-function makeLunarQuiz() {
-  const lunar = solarSystem.filter(q => q.category === "moon");
-  return pickRandom(lunar);
-}
+    // 퀴즈 가져오기 (에러를 카드에 표시)
+    async function fetchQuiz(mode) {
+      const m = mode || 'random';
+      try {
+        const r = await fetch('/chat', {
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({ mode: m })
+        });
+        if (!r.ok) {
+          const text = await r.text();
+          throw new Error(`HTTP ${r.status} /chat → ${text}`);
+        }
+        const resp = await r.json();
+        if (resp?.type !== 'quiz' || !resp?.data) {
+          throw new Error('Invalid payload from /chat');
+        }
+        return resp.data;
+      } catch (e) {
+        const $card = document.getElementById('card');
+        $card.innerHTML = `
+          <div class="qtitle">문제 불러오기에 실패했어요.</div>
+          <div class="qmeta" style="color:#b91c1c;">${e.message}</div>
+          <div class="hint" style="margin-top:8px;">잠시 후 다시 시도하거나, Render Logs를 확인해 주세요.</div>
+        `;
+        console.warn(e);
+        return null;
+      }
+    }
 
-// ------------------ 라우팅 ------------------ //
+    const $card = document.getElementById('card');
+    let current = null, currentMode = 'random';
 
-app.use("/public", express.static(path.join(__dirname, "public")));
+    function labelMode(m){
+      switch(m){
+        case 'random': return '랜덤';
+        case 'image': return '성도(이미지)';
+        case 'season': return '계절';
+        case 'star': return '밝은 별 소속';
+        case 'hemisphere': return '반구 구분';
+        case 'lunar': return '달';
+        case 'solar': return '태양계';
+        default: return m;
+      }
+    }
 
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "index.html"));
-});
+    function renderQuiz(data, mode){
+      current = data; currentMode = mode || currentMode;
+      const isHemi = data.choices.every(c => c === '북반구' || c === '남반구');
+      const isImageQuiz = !!data.image;
 
-app.get("/health", (req, res) => res.json({ ok: true }));
+      const btns = data.choices.map((label, idx) =>
+        `<button class="opt-btn" data-idx="${idx}" type="button">${idx+1}. ${label}</button>`
+      ).join('');
 
-app.post("/chat", (req, res) => {
-  const mode = req.body.mode || "random";
-  let quiz;
+      const imgBlock = isImageQuiz ? `
+        <div class="qimg-wrap">
+          <img id="qimg" class="qimg" src="${data.image}" alt="성도 이미지">
+        </div>
+        <div class="hint" style="text-align:center; margin-top:4px; font-size:11px;">
+          Charts © IAU / Sky & Telescope · CC BY 4.0
+        </div>
+      ` : '';
 
-  if (mode === "season") quiz = makeSeasonQuiz();
-  else if (mode === "star") quiz = makeStarQuiz();
-  else if (mode === "hemisphere") quiz = makeHemisphereQuiz();
-  else if (mode === "solar") quiz = makeSolarQuiz();
-  else if (mode === "lunar") quiz = makeLunarQuiz();
-  else if (mode === "image") quiz = makeImageQuiz();
-  else {
-    // 랜덤 모드 → 모든 유형 섞어서
-    const fns = [
-      makeSeasonQuiz,
-      makeStarQuiz,
-      makeHemisphereQuiz,
-      makeSolarQuiz,
-      makeLunarQuiz,
-      makeImageQuiz,
-    ];
-    quiz = pickRandom(fns)();
-  }
+      $card.innerHTML = `
+        <div class="qtitle">Q) ${data.question}</div>
+        <div class="qmeta">${isHemi ? '2지선다' : (data.choices.length+'지선다')} · 모드: ${labelMode(currentMode)}</div>
+        ${imgBlock}
+        <div class="opts ${isHemi ? 'cols-2' : 'cols-1'}" id="opts">
+          ${btns}
+        </div>
+        <div class="footer">
+          <div class="hint">정답을 고르세요.</div>
+          <div><button id="btnNext" class="ghost" type="button" disabled>다음 문제</button></div>
+        </div>
+      `;
 
-  res.json({ type: "quiz", data: quiz });
-});
+      const $img = document.getElementById('qimg');
+      if ($img) $img.addEventListener('click', ()=> $img.classList.toggle('lg'));
 
-// ------------------ 서버 시작 ------------------ //
-app.listen(PORT, "0.0.0.0", () => {
-  console.log(`✅ Quiz server running on port ${PORT}`);
-});
+      document.querySelectorAll('.opt-btn').forEach(btn=>{
+        btn.addEventListener('click', ()=> onChoose(btn));
+      });
+      document.getElementById('btnNext').addEventListener('click', async ()=>{
+        const next = await fetchQuiz(currentMode);
+        if (next) renderQuiz(next);
+      });
+    }
+
+    function onChoose(btn){
+      const idx = Number(btn.dataset.idx);
+      const isCorrect = idx === current.answerIndex;
+      document.querySelectorAll('.opt-btn').forEach(b=>{
+        b.disabled = true;
+        const i = Number(b.dataset.idx);
+        if (i === current.answerIndex) b.classList.add('correct');
+        if (i === idx && !isCorrect) b.classList.add('wrong');
+      });
+      const res = document.createElement('div');
+      res.className = 'result ' + (isCorrect ? 'ok' : 'bad');
+      res.textContent = isCorrect
+        ? `정답입니다! 축하합니다~🎉  ${current.explanation ? '· ' + current.explanation : ''}`
+        : `아쉬워요 😯 정답은 「${current.choices[current.answerIndex]}」 입니다. ${current.explanation ? '· ' + current.explanation : ''}`;
+      $card.appendChild(res);
+      const $btnNext = document.getElementById('btnNext');
+      $btnNext.disabled = false;
+      $btnNext.classList.remove('ghost'); $btnNext.classList.add('primary');
+    }
+
+    // 상단 모드 버튼
+    document.querySelectorAll('button[data-mode]').forEach(b=>{
+      b.addEventListener('click', async ()=>{
+        document.querySelectorAll('button[data-mode]').forEach(x=>x.classList.remove('primary'));
+        b.classList.add('primary');
+        const mode = b.getAttribute('data-mode');
+        const q = await fetchQuiz(mode);
+        if (q) renderQuiz(q, mode);
+      });
+    });
+  </script>
+</body>
+</html>
