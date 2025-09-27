@@ -6,7 +6,7 @@
     { "name_en": "Antlia", "name_ko": "공기펌프자리", "hemisphere": "S", "best_season_northern": "spring",
       "notable_stars": [] },
 
-    { "name_en": "Apus", "name_ko": "무발조자리", "hemisphere": "S", "best_season_northern": "summer",
+    { "name_en": "Apus", "name_ko": "극락조자리", "hemisphere": "S", "best_season_northern": "summer",
       "notable_stars": [] },
 
     { "name_en": "Aquarius", "name_ko": "물병자리", "hemisphere": "E", "best_season_northern": "autumn",
@@ -33,7 +33,7 @@
     { "name_en": "Camelopardalis", "name_ko": "기린자리", "hemisphere": "N", "best_season_northern": "year-round",
       "notable_stars": [] },
 
-    { "name_en": "Cancer", "name_ko": "게자리", "hemisphere": "N", "best_season_northern": "spring",
+    { "name_en": "Cancer", "name_ko": "게자리", "hemisphere": "N", "best_season_northern": "winter",
       "notable_stars": [ {"name":"Acubens","name_ko":"아쿠벤스"} ] },
 
     { "name_en": "Canes Venatici", "name_ko": "사냥개자리", "hemisphere": "N", "best_season_northern": "spring",
@@ -84,7 +84,7 @@
     { "name_en": "Corvus", "name_ko": "까마귀자리", "hemisphere": "N", "best_season_northern": "spring",
       "notable_stars": [] },
 
-    { "name_en": "Crater", "name_ko": "잔자리", "hemisphere": "N", "best_season_northern": "spring",
+    { "name_en": "Crater", "name_ko": "컵자리", "hemisphere": "N", "best_season_northern": "spring",
       "notable_stars": [] },
 
     { "name_en": "Crux", "name_ko": "남십자자리", "hemisphere": "S", "best_season_northern": "spring",
@@ -114,7 +114,7 @@
     { "name_en": "Gemini", "name_ko": "쌍둥이자리", "hemisphere": "N", "best_season_northern": "winter",
       "notable_stars": [ {"name":"Castor","name_ko":"카스토르"}, {"name":"Pollux","name_ko":"폴룩스"} ] },
 
-    { "name_en": "Grus", "name_ko": "학자리", "hemisphere": "S", "best_season_northern": "autumn",
+    { "name_en": "Grus", "name_ko": "두루미자리", "hemisphere": "S", "best_season_northern": "autumn",
       "notable_stars": [] },
 
     { "name_en": "Hercules", "name_ko": "헤르쿨레스자리", "hemisphere": "N", "best_season_northern": "summer",
@@ -168,13 +168,13 @@
     { "name_en": "Musca", "name_ko": "파리자리", "hemisphere": "S", "best_season_northern": "spring",
       "notable_stars": [] },
 
-    { "name_en": "Norma", "name_ko": "자루자리", "hemisphere": "S", "best_season_northern": "summer",
+    { "name_en": "Norma", "name_ko": "직각자자리", "hemisphere": "S", "best_season_northern": "summer",
       "notable_stars": [] },
 
     { "name_en": "Octans", "name_ko": "팔분의자리", "hemisphere": "S", "best_season_northern": "year-round",
       "notable_stars": [] },
 
-    { "name_en": "Ophiuchus", "name_ko": "땅꾼자리", "hemisphere": "E", "best_season_northern": "summer",
+    { "name_en": "Ophiuchus", "name_ko": "뱀주인(땅꾼)자리", "hemisphere": "E", "best_season_northern": "summer",
       "notable_stars": [ {"name":"Rasalhague","name_ko":"라살하기"} ] },
 
     { "name_en": "Orion", "name_ko": "오리온자리", "hemisphere": "E", "best_season_northern": "winter",
