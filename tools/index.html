@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>미드나잇의 천문 퀴즈 (with. AI)</title>
+  <!-- 캐시 무효화 메타 태그 -->
+  <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <style>
+    :root { --fg:#0f172a; --muted:#6b7280; --bg:#f6f7fb; --card:#fff; --line:#e5e7eb;
+            --primary:#111827; --ok:#16a34a; --bad:#dc2626; --btn:#fff; }
+    body { margin: 0; font-family: -apple-system, system-ui, Segoe UI, Roboto, 'Noto Sans KR', sans-serif; background: var(--bg); color: var(--fg); }
+    header { position: sticky; top: 0; z-index: 10; background: rgba(246,247,251,.85); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+    .wrap { max-width: 980px; margin: 0 auto; padding: 14px 16px; }
+    .row { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+    .space { flex: 1; }
+    .hint { color: var(--muted); font-size: 12px; }
+    button { appearance: none; border:1px solid var(--line); background: var(--btn); padding:10px 14px; border-radius: 12px; cursor:pointer; }
+    button.primary { background: var(--primary); color:#fff; border:none; }
+    .badge { border:1px solid var(--line); border-radius: 999px; padding: 4px 10px; font-size: 12px; }
+    .badge.ok { color:#047857; border-color:#34d399; }
+    .badge.fail { color:#b91c1c; border-color:#f87171; }
+    main { padding: 22px 16px 10px; }
+    .card { margin: 0 auto; max-width: 880px; background: var(--card); border-radius: 16px; box-shadow: 0 8px 24px rgba(0,0,0,.06); border:1px solid var(--line); padding: 18px; }
+    .qtitle { font-size: 18px; font-weight: 700; }
+    .opts { display:grid; gap:10px; margin-top: 10px; }
+    .opt-btn { padding: 12px; border:1px solid var(--line); border-radius:12px; background:#fff; cursor:pointer; }
+    .opt-btn.correct { border-color: #16a34a; }
+    .opt-btn.wrong { border-color: #dc2626; }
+    .result { margin-top: 12px; padding: 10px 12px; border-radius:12px; font-weight:600; }
+    .result.ok { background: #ecfdf5; color:#065f46; }
+    .result.bad { background: #fef2f2; color:#7f1d1d; }
+    .footer { display:flex; align-items:center; justify-content:space-between; margin-top:14px; }
+    .brand { max-width: 980px; margin: 10px auto 0; text-align:center; }
+    .brand img { max-width: 130px; width: 30%; height: auto; }
+    .credit { margin: 16px auto 24px; text-align: center; font-size: 12px; line-height: 1.6; color: #6b7280; }
+    .credit .yt { display: inline-block; margin-top: 6px; font-weight: 600; color: #1d4ed8; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap row">
+      <div style="font-weight:800;">미드나잇의 천문 퀴즈 (with. AI)</div>
+      <div class="space"></div>
+      <div id="health" class="badge fail">서버 연결 확인 중…</div>
+    </div>
+    <div class="wrap">
+      <div class="seg" id="modeBar">
+        <button data-mode="random" class="primary">랜덤</button>
+        <button data-mode="image">성도(이미지)</button>
+        <button data-mode="season">계절</button>
+        <button data-mode="star">밝은 별 소속</button>
+        <button data-mode="hemisphere">북·남반구 구분</button>
+        <!-- 달 버튼 제거 -->
+        <button data-mode="solar">태양계</button>
+      </div>
+      <div class="hint" style="margin-top:6px;">문제 유형 버튼을 누르면 화면이 새 문제로 교체됩니다.</div>
+    </div>
+  </header>
+
+  <main>
+    <div id="card" class="card">
+      <div class="qtitle">시작하려면 위에서 퀴즈 유형을 선택하세요.</div>
+    </div>
+    <div class="brand">
+      <img src="/public/brand/midnight_logo.png" alt="MIDNIGHT brand">
+    </div>
+  </main>
+
+  <footer class="credit">
+    This AI chatbot was planned by MIDNIGHT and built with AI support from ChatGPT.<br>
+    Constellation and solar system data are based on public resources from IAU, Sky & Telescope, Stellarium, and the HYG Database.<br><br>
+    <a class="yt" href="https://www.youtube.com/@midnight_astro" target="_blank">Youtube 미드나잇 천체관측 channel</a><br><br>
+    © <span id="year"></span> MIDNIGHT · All Rights Reserved.<br>
+    Unauthorized reproduction, modification, distribution, or commercial use is strictly prohibited.
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // 서버 상태
+    (async function(){
+      const $health = document.getElementById('health');
+      try {
+        const r = await fetch('/health',{cache:'no-store'});
+        if(!r.ok) throw new Error();
+        await r.json();
+        $health.textContent = '서버 연결 OK';
+        $health.classList.remove('fail'); $health.classList.add('ok');
+      } catch {
+        $health.textContent = '서버 연결 실패';
+        $health.classList.remove('ok'); $health.classList.add('fail');
+      }
+    })();
+
+    const $card = document.getElementById('card');
+    let current = null, currentMode = 'random';
+
+    async function fetchQuiz(mode) {
+      try {
+        const r = await fetch('/chat', {
+          method: 'POST',
+          headers: {'Content-Type':'application/json'},
+          body: JSON.stringify({ mode })
+        });
+        const data = await r.json();
+        return data.data;
+      } catch (e) {
+        $card.innerHTML = `<div class="qtitle">문제 불러오기 실패</div>`;
+        return null;
+      }
+    }
+
+    function renderQuiz(data, mode){
+      current = data; currentMode = mode;
+      const btns = data.choices.map((c,i)=>
+        `<button class="opt-btn" data-idx="${i}">${i+1}. ${c}</button>`).join('');
+      $card.innerHTML = `
+        <div class="qtitle">${data.question}</div>
+        <div class="opts">${btns}</div>
+        <div class="footer"><button id="btnNext" disabled>다음 문제</button></div>`;
+      document.querySelectorAll('.opt-btn').forEach(b=>{
+        b.onclick=()=>onChoose(b);
+      });
+      document.getElementById('btnNext').onclick=async()=>{
+        const q=await fetchQuiz(currentMode);
+        if(q) renderQuiz(q,currentMode);
+      };
+    }
+
+    function onChoose(btn){
+      const idx = Number(btn.dataset.idx);
+      const isCorrect = idx===current.answerIndex;
+      document.querySelectorAll('.opt-btn').forEach((b,i)=>{
+        b.disabled = true;
+        if(i===current.answerIndex) b.classList.add('correct');
+        if(i===idx && i!==current.answerIndex) b.classList.add('wrong');
+      });
+      const res=document.createElement('div');
+      res.className='result '+(isCorrect?'ok':'bad');
+      res.textContent=isCorrect ? `정답입니다! 🎉 ${current.explanation||""}`
+        : `오답 😯 정답은 ${current.choices[current.answerIndex]}`;
+      $card.appendChild(res);
+      document.getElementById('btnNext').disabled=false;
+    }
+
+    document.querySelectorAll('#modeBar button[data-mode]').forEach(b=>{
+      b.onclick=async()=>{
+        document.querySelectorAll('#modeBar button[data-mode]').forEach(x=>x.classList.remove('primary'));
+        b.classList.add('primary');
+        const mode=b.dataset.mode;
+        const q=await fetchQuiz(mode);
+        if(q) renderQuiz(q,mode);
+      };
+    });
+  </script>
+</body>
+</html>
