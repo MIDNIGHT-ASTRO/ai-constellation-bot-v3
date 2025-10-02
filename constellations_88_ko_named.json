@@ -96,7 +96,7 @@
     { "name_en": "Delphinus", "name_ko": "돌고래자리", "hemisphere": "N", "best_season_northern": "summer",
       "notable_stars": [ {"name":"Sualocin","name_ko":"수알로신"}, {"name":"Rotanev","name_ko":"로타네브"} ] },
 
-    { "name_en": "Dorado", "name_ko": "황소고기자리", "hemisphere": "S", "best_season_northern": "winter",
+    { "name_en": "Dorado", "name_ko": "황새치자리", "hemisphere": "S", "best_season_northern": "winter",
       "notable_stars": [] },
 
     { "name_en": "Draco", "name_ko": "용자리", "hemisphere": "N", "best_season_northern": "year-round",
