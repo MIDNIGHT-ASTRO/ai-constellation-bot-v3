@@ -12,7 +12,7 @@ const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 
-// ------------------ 유틸 ------------------ //
+// =============== 공통 유틸 ===============
 function safeLoadJSON(relPath) {
   const abs = path.join(__dirname, relPath);
   try {
@@ -22,296 +22,386 @@ function safeLoadJSON(relPath) {
     return { ok: false, error: e.message, path: abs, data: null };
   }
 }
-const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
-const safePick = (arr) => (Array.isArray(arr) && arr.length ? pick(arr) : null);
+const rand = (n) => Math.floor(Math.random() * n);
+const pick = (arr) => arr[rand(arr.length)];
 const shuffle = (arr) => arr.slice().sort(() => Math.random() - 0.5);
 const unique = (arr) => Array.from(new Set(arr));
+const safePick = (arr) => (Array.isArray(arr) && arr.length ? pick(arr) : null);
 
-// ------------------ 별자리 데이터 로드 & 정규화 ------------------ //
+// =============== 별자리 데이터 로드 & 정규화 ===============
 const RAW = safeLoadJSON("constellations_88_ko_named.json");
 let list = Array.isArray(RAW.data) ? RAW.data : (RAW.data?.constellations || []);
 if (!Array.isArray(list)) list = [];
 
-const seasonMap = {
-  spring: "봄",
-  summer: "여름",
-  autumn: "가을",
-  fall: "가을",
-  winter: "겨울",
-  "year-round": "연중",
-};
-const hemiMap = { N: "북반구", S: "남반구", E: "북반구" };
+const seasonMap = { spring:"봄", summer:"여름", autumn:"가을", fall:"가을", winter:"겨울", "year-round":"연중" };
+const hemiMap   = { N:"북반구", S:"남반구", E:"북반구" };
 
-const constellations = list
-  .map((c) => {
-    const stars =
-      Array.isArray(c?.notable_stars)
-        ? c.notable_stars.map((s) => s?.name_ko).filter(Boolean)
-        : Array.isArray(c?.stars)
-        ? c.stars
-        : [];
+const constellations = list.map(c => {
+  const stars = Array.isArray(c?.notable_stars)
+    ? c.notable_stars.map(s => s?.name_ko).filter(Boolean)
+    : Array.isArray(c?.stars) ? c.stars : [];
+  const season = c?.season || seasonMap[(c?.best_season_northern || "").toLowerCase()] || "연중";
+  const hemisphere = hemiMap[c?.hemisphere] || c?.hemisphere || "북반구";
+  return {
+    name_en: c?.name_en || c?.english || c?.name || "",
+    name_ko: c?.name_ko || c?.korean || "",
+    hemisphere,
+    season,
+    stars
+  };
+}).filter(c => c.name_en && c.name_ko);
 
-    const season =
-      c?.season ||
-      seasonMap[(c?.best_season_northern || "").toLowerCase()] ||
-      "연중";
-    const hemisphere = hemiMap[c?.hemisphere] || c?.hemisphere || "북반구";
-
-    return {
-      name_en: c?.name_en || c?.english || c?.name || "",
-      name_ko: c?.name_ko || c?.korean || "",
-      hemisphere,
-      season,
-      stars,
-    };
-  })
-  .filter((c) => c.name_ko && c.name_en);
-
-// 한국천문연구원 기준: 게자리=겨울 보정
+// 한국천문연구원 기준: 게자리 = 겨울 보정
 for (const c of constellations) {
-  if (c.name_ko === "게자리" || c.name_en?.toLowerCase() === "cancer") {
-    c.season = "겨울";
-  }
+  if (c.name_ko === "게자리" || c.name_en?.toLowerCase() === "cancer") c.season = "겨울";
 }
+console.log(`[boot] constellations normalized: ${constellations.length}개 (from ${RAW.path}) ${RAW.ok ? "" : "❌ "+RAW.error}`);
 
-console.log(
-  `[boot] constellations normalized: ${constellations.length}개 (from ${RAW.path}) ${RAW.ok ? "" : "❌ " + RAW.error}`
-);
-
-// ------------------ 태양계 원천 데이터 → 문항 생성 ------------------ //
+// =============== 태양계 원천 → 문제은행 생성 ===============
 const SOL = safeLoadJSON("solar_system.json");
 const sol = SOL.data || {};
-console.log(
-  `[boot] solar_system source: ${SOL.ok ? "OK" : "FAIL"} (from ${SOL.path}) ${SOL.ok ? "" : "❌ " + SOL.error}`
-);
+console.log(`[boot] solar_system source: ${SOL.ok ? "OK" : "FAIL"} (from ${SOL.path}) ${SOL.ok ? "" : "❌ "+SOL.error}`);
 
-const planets = Array.isArray(sol.planets) ? sol.planets : [];
-const moons = Array.isArray(sol.moons) ? sol.moons : [];
+const planets  = Array.isArray(sol.planets)  ? sol.planets  : [];
+const moons    = Array.isArray(sol.moons)    ? sol.moons    : [];
 const eclipses = Array.isArray(sol.eclipses) ? sol.eclipses : [];
-const sunInfo = sol.sun || null;
+const sunInfo  = sol.sun || null;
 
-let solarBank = [];
-let lunarBank = [];
+// — 행성 영문 슬러그(행성 이미지 파일명) 매핑
+const planetSlugByKo = {
+  "수성":"mercury","금성":"venus","지구":"earth","화성":"mars",
+  "목성":"jupiter","토성":"saturn","천왕성":"uranus","해왕성":"neptune"
+};
+function findPlanetImageSlug(nameKo) {
+  const slug = planetSlugByKo[nameKo];
+  if (!slug) return null;
+  const base = path.join(__dirname, "public", "images", "planets", slug);
+  const candidates = [base+".png", base+".jpg", base+".jpeg", base+".webp", base+".svg"];
+  for (const f of candidates) {
+    if (fs.existsSync(f)) {
+      return `/public/images/planets/${path.basename(f)}`;
+    }
+  }
+  return null;
+}
 
-// (A) 태양 정체
+// — 내행성/외행성/성분 타입
+const innerPlanets = new Set(["수성","금성","지구","화성"]);
+const outerPlanets = new Set(["목성","토성","천왕성","해왕성"]);
+
+// — 달(문항용 지식)
+const MOON_FACTS = {
+  rotation_days: 27.3,  // 자전주기(일) ~ 항성월과 동일
+  synodic_days: 29.5,   // 삭망주기(합삭→합삭)
+  // 시간대 가시성(간단 모델): 저녁에 볼 수 없는=그믐달, 새벽에 볼 수 없는=초승달
+  evening_not_visible: "그믐달",
+  dawn_not_visible: "초승달"
+};
+
+// — 문제은행
+let solarBank = []; // (달 관련 포함)
+
+// (1) 태양 정체
 if (sunInfo) {
+  const choices = ["항성","행성","위성","왜소행성"];
+  const shuffled = shuffle(choices);
   solarBank.push({
     category: "solar",
+    qtype: "sun_identity",
     question: "Q) 태양은 무엇인가요?",
-    choices: ["항성", "행성", "위성", "왜소행성"],
-    answerIndex: 0,
-    explanation: "태양은 태양계의 중심 항성입니다.",
+    choices: shuffled,
+    answerIndex: shuffled.indexOf("항성"),
+    explanation: "태양은 태양계의 중심 항성입니다."
   });
 }
 
-// (B) 일식/월식 배치
-if (eclipses.length) {
-  for (const e of eclipses) {
-    if (!Array.isArray(e.order) || e.order.length !== 3) continue;
-    const correctOrder = e.order.join(" → ");
-    const wrongs = new Set();
-
-    // 뒤집기 + 섞기
-    wrongs.add([...e.order].reverse().join(" → "));
-    for (let i = 0; i < 8 && wrongs.size < 3; i++) wrongs.add(shuffle(e.order).join(" → "));
-    if (wrongs.size < 3) {
-      wrongs.add(["지구", "달", "태양"].join(" → "));
-      wrongs.add(["달", "태양", "지구"].join(" → "));
-    }
-
-    const choices = shuffle([correctOrder, ...Array.from(wrongs).slice(0, 3)]);
-    solarBank.push({
-      category: "solar",
-      question: `Q) ${e.type}이(가) 일어날 때, 올바른 천체 배치는 무엇일까요?`,
-      choices,
-      answerIndex: choices.indexOf(correctOrder),
-      explanation: e.desc || "",
-    });
+// (2) 일식/월식 배치
+for (const e of eclipses) {
+  if (!Array.isArray(e.order) || e.order.length !== 3) continue;
+  const correct = e.order.join(" → ");
+  const wrongs = new Set();
+  wrongs.add([...e.order].reverse().join(" → "));
+  for (let i=0; i<8 && wrongs.size<3; i++) wrongs.add(shuffle(e.order).join(" → "));
+  if (wrongs.size < 3) {
+    wrongs.add(["지구","달","태양"].join(" → "));
+    wrongs.add(["달","태양","지구"].join(" → "));
   }
+  const choices = shuffle([correct, ...Array.from(wrongs).slice(0,3)]);
+  solarBank.push({
+    category: "solar",
+    qtype: "eclipse_order",
+    question: `Q) ${e.type}이(가) 일어날 때 올바른 천체 배치는 무엇일까요?`,
+    choices,
+    answerIndex: choices.indexOf(correct),
+    explanation: e.desc || ""
+  });
 }
 
-// (C) 행성 공전 순서
-if (planets.length) {
-  const byOrder = planets
-    .filter((p) => typeof p.orbit_order === "number")
-    .sort((a, b) => a.orbit_order - b.orbit_order);
-  const names = byOrder.map((p) => p.name_ko);
+// (3) 행성 ‘태양으로부터 n번째’ 순서
+const byOrder = planets
+  .filter(p => typeof p.orbit_order === "number")
+  .sort((a,b)=> a.orbit_order - b.orbit_order);
+const planetNames = byOrder.map(p => p.name_ko);
 
-  for (const p of byOrder) {
-    const correct = p.name_ko;
-    const wrongs = shuffle(names.filter((n) => n !== correct)).slice(0, 3);
-    const choices = shuffle([correct, ...wrongs]);
-    solarBank.push({
-      category: "solar",
-      question: `Q) 태양에서 ${p.orbit_order}번째 행성은 무엇일까요?`,
-      choices,
-      answerIndex: choices.indexOf(correct),
-      explanation: `태양에서 ${p.orbit_order}번째 행성은 ${correct}입니다.`,
-    });
-  }
+for (const p of byOrder) {
+  const correct = p.name_ko;
+  const distractors = shuffle(planetNames.filter(n => n !== correct)).slice(0,3);
+  const choices = shuffle([correct, ...distractors]);
+  solarBank.push({
+    category: "solar",
+    qtype: "planet_order",
+    question: `Q) 태양에서 ${p.orbit_order}번째 행성은 무엇일까요?`,
+    choices,
+    answerIndex: choices.indexOf(correct),
+    explanation: `태양에서 ${p.orbit_order}번째 행성은 ${correct}입니다.`
+  });
 }
 
-// (D) 행성 유형
-if (planets.length) {
-  const types = unique(planets.map((p) => p.type).filter(Boolean));
-  for (const p of planets) {
-    const correct = p.type;
-    const wrongs = shuffle(types.filter((t) => t !== correct)).slice(0, 3);
-    const pool = unique([correct, ...wrongs]);
-    const choices = shuffle(pool.length >= 4 ? pool.slice(0, 4) : pool);
-    solarBank.push({
-      category: "solar",
-      question: `Q) ${p.name_ko}은(는) 어떤 유형의 행성일까요?`,
-      choices,
-      answerIndex: choices.indexOf(correct),
-      explanation: `${p.name_ko}은(는) ${correct} 행성입니다.`,
-    });
-  }
+// (4) 행성 ‘성분/유형’(지구형·가스형·얼음형)
+const types = unique(planets.map(p=>p.type).filter(Boolean));
+for (const p of planets) {
+  const correct = p.type;
+  const distractors = shuffle(types.filter(t=> t !== correct)).slice(0,3);
+  const pool = unique([correct, ...distractors]);
+  const choices = shuffle(pool.length>=4 ? pool.slice(0,4) : pool);
+  solarBank.push({
+    category: "solar",
+    qtype: "planet_type",
+    question: `Q) ${p.name_ko}은(는) 어떤 유형의 행성일까요?`,
+    choices,
+    answerIndex: choices.indexOf(correct),
+    explanation: `${p.name_ko}은(는) ${correct} 행성입니다.`
+  });
 }
 
-// (E) 위성 소속 (달 포함)
+// (5) 내행성/외행성 구분
+for (const p of planets) {
+  const correct = innerPlanets.has(p.name_ko) ? "내행성" : (outerPlanets.has(p.name_ko) ? "외행성" : null);
+  if (!correct) continue;
+  const choices = shuffle(["내행성","외행성"]);
+  solarBank.push({
+    category: "solar",
+    qtype: "inner_outer",
+    question: `Q) ${p.name_ko}은(는) 내행성일까요, 외행성일까요?`,
+    choices,
+    answerIndex: choices.indexOf(correct),
+    explanation: `${p.name_ko}은(는) ${correct}에 속합니다.`
+  });
+}
+
+// (6) 행성 이미지 보고 이름 맞히기 (이미지 파일이 존재하는 경우만)
+for (const p of planets) {
+  const img = findPlanetImageSlug(p.name_ko);
+  if (!img) continue; // 이미지 없으면 스킵
+  const correct = p.name_ko;
+  const distractors = shuffle(planetNames.filter(n => n !== correct)).slice(0,3);
+  const choices = shuffle([correct, ...distractors]);
+  solarBank.push({
+    category: "solar",
+    qtype: "planet_image",
+    question: "Q) 다음 행성 이미지는 무엇일까요?",
+    image: img,
+    choices,
+    answerIndex: choices.indexOf(correct),
+    explanation: `이미지는 ${correct}입니다.`
+  });
+}
+
+// (7) 대표 위성 소속 맞히기 (달 포함, 모든 moons 사용)
 if (moons.length) {
-  const planetNamePool = unique([
-    ...planets.map((p) => p.name_ko),
-    ...moons.map((m) => m.planet),
+  const planetPool = unique([
+    ...planets.map(p=>p.name_ko),
+    ...moons.map(m=>m.planet)
   ]).filter(Boolean);
-
   for (const m of moons) {
     const correct = m.planet;
-    const wrongs = shuffle(planetNamePool.filter((n) => n !== correct)).slice(0, 3);
-    const choices = shuffle([correct, ...wrongs]);
-    lunarBank.push({
-      category: "moon",
+    const distractors = shuffle(planetPool.filter(n => n !== correct)).slice(0,3);
+    const choices = shuffle([correct, ...distractors]);
+    solarBank.push({
+      category: "solar",
+      qtype: "moon_owner",
       question: `Q) ${m.name_ko}은(는) 어느 행성의 위성일까요?`,
       choices,
       answerIndex: choices.indexOf(correct),
-      explanation: `${m.name_ko}은(는) ${correct}의 위성입니다.`,
+      explanation: `${m.name_ko}은(는) ${correct}의 위성입니다.`
     });
   }
 }
 
-console.log(`[boot] solarBank: ${solarBank.length}문항, lunarBank: ${lunarBank.length}문항 생성`);
+// (8) 달의 자전/공전(삭망) 주기
+{
+  // 자전주기
+  const correct = "약 27.3일";
+  const all = ["24시간","약 29.5일","약 7일","약 14일","약 27.3일","약 30일"];
+  const choices = shuffle(unique([correct, ...shuffle(all).slice(0,3)]));
+  solarBank.push({
+    category: "solar",
+    qtype: "moon_rotation",
+    question: "Q) 달의 자전주기는 얼마일까요?",
+    choices,
+    answerIndex: choices.indexOf(correct),
+    explanation: "달의 자전주기는 약 27.3일로, 항성월(공전주기)과 같습니다."
+  });
+  // 삭망주기(합삭→합삭)
+  const correct2 = "약 29.5일";
+  const all2 = ["약 27.3일","24시간","약 7일","약 14일","약 30일","약 31일"];
+  const choices2 = shuffle(unique([correct2, ...shuffle(all2).slice(0,3)]));
+  solarBank.push({
+    category: "solar",
+    qtype: "moon_synodic",
+    question: "Q) 달의 삭망주기(합삭에서 다음 합삭까지)는 얼마일까요?",
+    choices: choices2,
+    answerIndex: choices2.indexOf(correct2),
+    explanation: "달의 삭망주기는 약 29.5일입니다."
+  });
+}
 
-// ------------------ 별자리 퀴즈 생성기 ------------------ //
+// (9) 월령과 시간대(가시성) — 저녁/새벽 변형
+{
+  // 저녁에 볼 수 없는 달
+  const correct = MOON_FACTS.evening_not_visible; // "그믐달"
+  const pool = ["보름달","상현달","초승달","그믐달","하현달"];
+  const choices = shuffle(["보름달","상현달","초승달", correct]); // 명시적
+  solarBank.push({
+    category: "solar",
+    qtype: "moon_phase_evening",
+    question: "Q) 다음 중 ‘저녁 시간’에 볼 수 없는 달의 모습은?",
+    choices,
+    answerIndex: choices.indexOf(correct),
+    explanation: "그믐달은 주로 새벽 하늘에 보입니다."
+  });
+
+  // 새벽에 볼 수 없는 달
+  const correct2 = MOON_FACTS.dawn_not_visible; // "초승달"
+  const pool2 = ["보름달","하현달","그믐달","초승달","상현달"];
+  const choices2 = shuffle(["보름달","하현달","그믐달", correct2]);
+  solarBank.push({
+    category: "solar",
+    qtype: "moon_phase_dawn",
+    question: "Q) 다음 중 ‘새벽 시간’에 볼 수 없는 달의 모습은?",
+    choices: choices2,
+    answerIndex: choices2.indexOf(correct2),
+    explanation: "초승달은 해가 진 직후 저녁 서쪽 하늘에서 잘 보입니다."
+  });
+}
+
+console.log(`[boot] solarBank 생성 완료: ${solarBank.length}문항`);
+
+// =============== 별자리 퀴즈 생성기 ===============
 function makeSeasonQuiz() {
-  const pool = constellations.filter((c) => c.hemisphere === "북반구" && c.season && c.name_ko);
+  const pool = constellations.filter(c => c.hemisphere === "북반구" && c.season && c.name_ko);
   const c = safePick(pool);
   if (!c) return null;
-  const seasons = ["봄", "여름", "가을", "겨울"];
+  const seasons = ["봄","여름","가을","겨울"];
   return {
     question: `Q) ${c.name_ko}는 북반구 기준 어떤 계절의 별자리일까요?`,
     choices: seasons,
     answerIndex: seasons.indexOf(c.season),
-    explanation: `${c.name_ko}는 ${c.season}철에 잘 보이는 별자리입니다.`,
+    explanation: `${c.name_ko}는 ${c.season}철에 잘 보이는 별자리입니다.`
   };
 }
 
 function makeStarQuiz() {
-  const pool = constellations.filter((c) => Array.isArray(c.stars) && c.stars.length && c.name_ko);
+  const pool = constellations.filter(c => Array.isArray(c.stars) && c.stars.length && c.name_ko);
   const c = safePick(pool);
   if (!c) return null;
   const star = pick(c.stars);
   const wrongs = constellations
-    .filter((x) => x.name_ko !== c.name_ko)
+    .filter(x => x.name_ko !== c.name_ko)
     .sort(() => Math.random() - 0.5)
     .slice(0, 3)
-    .map((x) => x.name_ko);
+    .map(x => x.name_ko);
   const choices = shuffle([c.name_ko, ...wrongs]);
   return {
     question: `Q) ‘${star}’ 별은 어느 별자리에 속해 있을까요?`,
     choices,
     answerIndex: choices.indexOf(c.name_ko),
-    explanation: `${star}는 ${c.name_ko}에 속한 별입니다.`,
+    explanation: `${star}는 ${c.name_ko}에 속한 별입니다.`
   };
 }
 
 function makeHemisphereQuiz() {
-  const pool = constellations.filter((c) => c.name_ko && c.hemisphere);
+  const pool = constellations.filter(c => c.name_ko && c.hemisphere);
   const c = safePick(pool);
   if (!c) return null;
-  const choices = ["북반구", "남반구"];
+  const choices = ["북반구","남반구"];
   return {
     question: `Q) ${c.name_ko}는 주로 어느 반구에서 잘 보일까요?`,
     choices,
     answerIndex: choices.indexOf(c.hemisphere),
-    explanation: `${c.name_ko}는 ${c.hemisphere} 별자리입니다.`,
+    explanation: `${c.name_ko}는 ${c.hemisphere} 별자리입니다.`
   };
 }
 
-// ------------------ 태양/달 퀴즈 픽커 (안전 가드) ------------------ //
+// =============== 태양계 퀴즈 픽커(달 포함) ===============
 function makeSolarQuiz() {
+  // 태양/달/행성 모든 유형에서 무작위 1문항
   const q = safePick(solarBank);
   if (q && Array.isArray(q.choices) && typeof q.answerIndex === "number") return q;
+
+  // 최후 방어: 기본 문항
+  const base = ["항성","행성","위성","왜소행성"];
+  const shuffled = shuffle(base);
   return {
     category: "solar",
+    qtype: "sun_identity_fallback",
     question: "Q) 태양은 무엇인가요?",
-    choices: ["항성", "행성", "위성", "왜소행성"],
-    answerIndex: 0,
-    explanation: "태양은 태양계의 중심 항성입니다. (fallback)",
-  };
-}
-function makeLunarQuiz() {
-  const q = safePick(lunarBank);
-  if (q && Array.isArray(q.choices) && typeof q.answerIndex === "number") return q;
-  return {
-    category: "moon",
-    question: "Q) 달은(는) 어느 행성의 위성일까요?",
-    choices: ["지구", "화성", "목성", "수성"].sort(() => Math.random() - 0.5),
-    answerIndex: 0,
-    explanation: "달은 지구의 위성입니다. (fallback)",
+    choices: shuffled,
+    answerIndex: shuffled.indexOf("항성"),
+    explanation: "태양은 태양계의 중심 항성입니다. (fallback)"
   };
 }
 
-// ------------------ 성도(이미지) 퀴즈 ------------------ //
+// 성도(이미지) 별자리
 function makeImageQuiz() {
-  const pool = constellations.filter((c) => c.name_ko && c.name_en);
+  const pool = constellations.filter(c => c.name_ko && c.name_en);
   const c = safePick(pool);
   if (!c) return null;
   const imagePath = `/public/images/constellations_iau/${c.name_en.toLowerCase()}.svg`;
   const wrongs = pool
-    .filter((x) => x.name_ko !== c.name_ko)
+    .filter(x => x.name_ko !== c.name_ko)
     .sort(() => Math.random() - 0.5)
     .slice(0, 3)
-    .map((x) => x.name_ko);
+    .map(x => x.name_ko);
   const choices = shuffle([c.name_ko, ...wrongs]);
   return {
     question: "Q) 다음 성도 이미지는 어떤 별자리일까요?",
     choices,
     answerIndex: choices.indexOf(c.name_ko),
     explanation: `이 성도는 ${c.name_ko}(${c.name_en}) 자리입니다.`,
-    image: imagePath,
+    image: imagePath
   };
 }
 
-// ------------------ 정적/페이지 ------------------ //
+// =============== 정적/페이지 & 디버그 ===============
 app.use("/public", express.static(path.join(__dirname, "public")));
 app.get("/", (req, res) => res.sendFile(path.join(__dirname, "index.html")));
 app.get("/health", (req, res) => res.json({ ok: true }));
 
-// 디버그
+// 디버그: 카운트/샘플
 app.get("/debug", (req, res) => {
   res.json({
     constellations_count: constellations.length,
     solarBank_count: solarBank.length,
-    lunarBank_count: lunarBank.length,
     samples: {
       constellation: constellations[0] || null,
-      solar: solarBank[0] || null,
-      lunar: lunarBank[0] || null,
-    },
+      solar: solarBank[0] || null
+    }
   });
 });
+// 디버그: 즉석 샘플
 app.get("/debug/sample", (req, res) => {
   res.json({
     solarSample: makeSolarQuiz(),
-    lunarSample: makeLunarQuiz(),
   });
 });
 
-// ------------------ API ------------------ //
+// =============== API ===============
 app.post("/chat", (req, res) => {
   try {
-    const mode = req.body?.mode || "random";
+    let mode = req.body?.mode || "random";
+    // ✅ 'lunar' 버튼도 'solar'로 통합 처리
+    if (mode === "lunar") mode = "solar";
     console.log("[/chat] mode =", mode);
 
     const pickers = {
@@ -319,56 +409,61 @@ app.post("/chat", (req, res) => {
       star: makeStarQuiz,
       hemisphere: makeHemisphereQuiz,
       solar: makeSolarQuiz,
-      lunar: makeLunarQuiz,
-      image: makeImageQuiz,
+      image: makeImageQuiz
     };
 
     let quiz = pickers[mode] ? pickers[mode]() : null;
 
-    // 실패 시에도 500을 내지 않고, 다른 타입으로 대체 시도 (UX 보호)
+    // 실패 시에도 500을 내지 않고 부드럽게 대체
     if (!quiz) {
       console.warn("[/chat] quiz was null for mode =", mode, "→ fallback sequence");
-      const order = [makeSolarQuiz, makeLunarQuiz, makeSeasonQuiz, makeStarQuiz, makeHemisphereQuiz, makeImageQuiz];
+      const order = [makeSolarQuiz, makeSeasonQuiz, makeStarQuiz, makeHemisphereQuiz, makeImageQuiz];
       for (const fn of order) {
         quiz = fn();
         if (quiz) break;
       }
     }
 
-    // 최후 방어: 형식 불량 시 기본 문항 반환
+    // 형식 불량 시에도 기본 문항 반환(UX 보호)
     if (!quiz || !Array.isArray(quiz.choices) || typeof quiz.answerIndex !== "number") {
       console.error("[/chat] INVALID_QUIZ_PAYLOAD", { mode, quizNull: !quiz });
+      const base = ["항성","행성","위성","왜소행성"];
+      const shuffled = shuffle(base);
       return res.json({
         type: "quiz",
         data: {
-          question: "Q) 태양은 무엇인가요?",
-          choices: ["항성", "행성", "위성", "왜소행성"],
-          answerIndex: 0,
-          explanation: "임시 문항(안전 가드)입니다. 서버 로그를 확인해 주세요.",
           category: "solar",
-        },
+          qtype: "sun_identity_guard",
+          question: "Q) 태양은 무엇인가요?",
+          choices: shuffled,
+          answerIndex: shuffled.indexOf("항성"),
+          explanation: "임시 문항(안전 가드)입니다. 서버 로그를 확인해 주세요."
+        }
       });
     }
 
     return res.json({ type: "quiz", data: quiz });
   } catch (e) {
     console.error("[/chat] error:", e);
-    // 예외 시에도 200 + 기본 문항
+    // 예외 시에도 200 + 기본 문항 반환
+    const base = ["항성","행성","위성","왜소행성"];
+    const shuffled = shuffle(base);
     return res.json({
       type: "quiz",
       data: {
-        question: "Q) 태양은 무엇인가요?",
-        choices: ["항성", "행성", "위성", "왜소행성"],
-        answerIndex: 0,
-        explanation: "임시 문항(예외 처리)입니다. 서버 로그를 확인해 주세요.",
         category: "solar",
-      },
+        qtype: "sun_identity_exception",
+        question: "Q) 태양은 무엇인가요?",
+        choices: shuffled,
+        answerIndex: shuffled.indexOf("항성"),
+        explanation: "임시 문항(예외 처리)입니다. 서버 로그를 확인해 주세요."
+      }
     });
   }
 });
 
-// ------------------ 서버 시작 ------------------ //
+// =============== 서버 시작 ===============
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`✅ Quiz server running on port ${PORT}`);
-  console.log(`➡️  Health: GET /health  |  Debug: GET /debug  |  Debug sample: GET /debug/sample  |  Quiz: POST /chat`);
+  console.log(`➡️  Health: GET /health  |  Debug: GET /debug | Sample: GET /debug/sample | Quiz: POST /chat`);
 });
