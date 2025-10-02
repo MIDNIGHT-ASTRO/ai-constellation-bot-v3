@@ -308,6 +308,10 @@ app.get("/debug", (req, res) => {
 app.post("/chat", (req, res) => {
   try {
     const mode = req.body?.mode || "random";
+
+    // ★ 여기에 추가
+    console.log("[/chat] mode =", mode);
+
     const pickers = {
       season: makeSeasonQuiz,
       star: makeStarQuiz,
@@ -320,6 +324,8 @@ app.post("/chat", (req, res) => {
     let quiz = pickers[mode] ? pickers[mode]() : null;
 
     if ((mode === "solar" || mode === "lunar") && !quiz) {
+      // (선택) 원인 파악용 추가 로그
+      console.warn("[/chat] NO_QUIZ_FOR_CATEGORY:", mode);
       return res.status(500).json({
         error: "NO_QUIZ_FOR_CATEGORY",
         message: `요청 모드(${mode})에 해당하는 문제가 없습니다. /debug에서 solarBank/lunarBank 개수를 확인하세요.`
@@ -327,6 +333,8 @@ app.post("/chat", (req, res) => {
     }
 
     if (!quiz) {
+      // (선택) 대체 로직 들어가는 경우 로그
+      console.log("[/chat] fallback to other quiz types (mode:", mode, ")");
       const order = [
         makeSeasonQuiz,
         makeStarQuiz,
@@ -352,6 +360,7 @@ app.post("/chat", (req, res) => {
     return res.status(500).json({ error: "QUIZ_SERVER_ERROR", message: String(e) });
   }
 });
+
 
 // ------------------ 서버 시작 ------------------ //
 app.listen(PORT, "0.0.0.0", () => {
