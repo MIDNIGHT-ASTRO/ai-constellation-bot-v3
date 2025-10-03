@@ -1,181 +1,83 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="UTF-8" />
   <title>미드나잇의 천문 퀴즈 (with. AI)</title>
-  <!-- 캐시 무효화 -->
-  <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate" />
-  <meta http-equiv="Pragma" content="no-cache" />
-  <meta http-equiv="Expires" content="0" />
   <style>
-    :root { --fg:#0f172a; --muted:#6b7280; --bg:#f6f7fb; --card:#fff; --line:#e5e7eb;
-            --primary:#111827; --ok:#16a34a; --bad:#dc2626; --btn:#fff; }
-    * { box-sizing: border-box; }
-    body { margin: 0; font-family: -apple-system, system-ui, Segoe UI, Roboto, 'Noto Sans KR', sans-serif; background: var(--bg); color: var(--fg); }
-    header { position: sticky; top: 0; z-index: 10; background: rgba(246,247,251,.85); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
-    .wrap { max-width: 980px; margin: 0 auto; padding: 14px 16px; }
-    .row { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
-    .space { flex: 1; }
-    .hint { color: var(--muted); font-size: 12px; }
-    button { appearance: none; border:1px solid var(--line); background: var(--btn); padding:10px 14px; border-radius: 12px; cursor:pointer; }
-    button.primary { background: var(--primary); color:#fff; border:none; }
-    button.ghost { background:transparent; }
-    button:disabled { opacity: .6; cursor: not-allowed; }
-    .seg { display:flex; gap:6px; flex-wrap:wrap; }
-    main { padding: 22px 16px 10px; }
-    .card { margin: 0 auto; max-width: 880px; background: var(--card); border-radius: 16px; box-shadow: 0 8px 24px rgba(0,0,0,.06); border:1px solid var(--line); padding: 18px; }
-    .qtitle { font-size: 18px; font-weight: 700; line-height: 1.35; }
-    .qmeta { margin-top: 6px; font-size: 12px; color: var(--muted); }
-    .qimg-wrap { margin: 10px 0 6px; display:flex; justify-content:center; }
-    .qimg { max-width:100%; height:auto; max-height: 42vh; object-fit: contain; border:1px solid var(--line); border-radius:8px; background:#fff; cursor: zoom-in; }
-    .qimg.lg { max-height: 86vh; cursor: zoom-out; }
-    @media (max-width: 640px) { .qimg { max-height: 52vh; } }
-    .opts { display:grid; gap:10px; margin-top: 10px; }
-    .opts.cols-1 { grid-template-columns: 1fr; }
-    .opt-btn { padding: 12px; text-align:left; border:1px solid var(--line); border-radius:12px; background:#fff; transition: transform .06s ease, border-color .06s ease; }
-    .opt-btn:hover { transform: translateY(-1px); }
-    .opt-btn.correct { border-color: #86efac; box-shadow: 0 0 0 3px rgba(22,163,74,.15) inset; }
-    .opt-btn.wrong   { border-color: #fca5a5; box-shadow: 0 0 0 3px rgba(220,38,38,.12) inset; }
-    .result { margin-top: 12px; padding: 10px 12px; border-radius:12px; font-weight:600; }
-    .result.ok  { background: #ecfdf5; color:#065f46; }
-    .result.bad { background: #fef2f2; color:#7f1d1d; }
-    .footer { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:14px; }
-    .badge { border:1px solid var(--line); border-radius: 999px; padding: 4px 10px; font-size: 12px; }
-    .badge.ok { color:#047857; border-color:#34d399; }
-    .badge.fail { color:#b91c1c; border-color:#f87171; }
-    .credit { margin: 16px auto 24px; padding: 12px; text-align: center; font-size: 12px; line-height: 1.6; color: #6b7280; max-width: 980px; }
-    .credit .warn { display: block; margin-top: 12px; font-size: 11px; color: #b91c1c; }
+    body { font-family: sans-serif; background:#f7f7f7; margin:0; padding:0; }
+    header { background:#111; color:#fff; padding:12px; text-align:center; font-size:20px; }
+    #modeBar { display:flex; justify-content:center; gap:10px; margin:12px; }
+    #modeBar button { padding:8px 14px; border-radius:6px; border:1px solid #ccc; cursor:pointer; }
+    #modeBar button.primary { background:#111; color:#fff; }
+    #quizBox { max-width:600px; margin:20px auto; background:#fff; padding:20px; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1);}
+    #choices button { display:block; width:100%; margin:6px 0; padding:10px; border-radius:6px; border:1px solid #ccc; cursor:pointer; text-align:left; }
+    #choices button.correct { background:#c6f6d5; }
+    #choices button.wrong { background:#fed7d7; }
+    #credit { text-align:center; font-size:12px; color:#555; margin:20px; }
+    img.quiz-img { max-width:100%; height:auto; display:block; margin:10px auto; }
   </style>
 </head>
 <body>
-  <header>
-    <div class="wrap row">
-      <div style="font-weight:800;">미드나잇의 천문 퀴즈 (with. AI)</div>
-      <div class="space"></div>
-      <div id="health" class="badge fail">서버 연결 확인 중…</div>
-    </div>
-    <div class="wrap">
-      <div class="seg" id="modeBar">
-        <button data-mode="photo" class="primary">천체 사진</button>
-      </div>
-      <div class="hint" style="margin-top:6px;">사진을 보고 천체를 맞혀보세요.</div>
-    </div>
-  </header>
-
-  <main>
-    <div id="card" class="card" aria-live="polite">
-      <div class="qtitle">“천체 사진” 버튼을 눌러 시작하세요.</div>
-      <div class="qmeta">이미지를 클릭하면 크게/작게 전환됩니다.</div>
-    </div>
-  </main>
-
-  <footer class="credit">
-    © <span id="year"></span> MIDNIGHT · All Rights Reserved.<br>
-    Unauthorized reproduction, modification, distribution, or commercial use is strictly prohibited.
-    <span class="warn">※ 본 페이지의 일부 이미지는 사용자 제공 로컬 에셋입니다.</span>
-  </footer>
-
+  <header>미드나잇의 천문 퀴즈 (with. AI)</header>
+  <div id="modeBar">
+    <button data-mode="random" class="primary">랜덤</button>
+    <button data-mode="image">성도(이미지)</button>
+    <button data-mode="constellation">별자리퀴즈</button>
+    <button data-mode="solar">태양계</button>
+  </div>
+  <div id="quizBox">퀴즈를 선택하세요!</div>
+  <div id="credit">
+    Made by 미드나잇(MIDNIGHT) × ChatGPT<br/>
+    <a href="https://www.youtube.com/@midnight_astro" target="_blank">Youtube 미드나잇 천체관측 channel</a><br/>
+    Unauthorized reproduction or redistribution is strictly prohibited.
+  </div>
   <script>
-    document.getElementById('year').textContent = new Date().getFullYear();
+    async function fetchQuiz(mode){
+      const res=await fetch("/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({mode})});
+      if(!res.ok){alert("문제 불러오기 실패");return null;}
+      return (await res.json()).data;
+    }
 
-    // 서버 상태
-    (async function health() {
-      const $health = document.getElementById('health');
-      try {
-        const r = await fetch('/health', {cache:'no-store'});
-        if (!r.ok) throw new Error();
-        await r.json();
-        $health.textContent = '서버 연결 OK';
-        $health.classList.remove('fail'); $health.classList.add('ok');
-      } catch {
-        $health.textContent = '서버 연결 실패';
-        $health.classList.remove('ok'); $health.classList.add('fail');
-      }
-    })();
+    function renderQuiz(q){
+      const box=document.getElementById("quizBox");
+      box.innerHTML="";
+      const qEl=document.createElement("div");
+      qEl.textContent=q.question;
+      box.appendChild(qEl);
 
-    const $card = document.getElementById('card');
-    let current = null, currentMode = 'photo';
-
-    async function fetchQuiz(mode) {
-      try {
-        const r = await fetch('/chat', {
-          method: 'POST',
-          headers: {'Content-Type':'application/json'},
-          body: JSON.stringify({ mode })
-        });
-        if (!r.ok) {
-          const t = await r.text();
-          throw new Error(`HTTP ${r.status} /chat → ${t}`);
+      if(q.image){
+        const img=document.createElement("img");
+        img.src=q.image;
+        img.className="quiz-img";
+        box.appendChild(img);
+        if(q.image_credit){
+          const c=document.createElement("div");
+          c.style="font-size:11px;color:#666;text-align:center;margin:4px;";
+          c.textContent=q.image_credit;
+          box.appendChild(c);
         }
-        const data = await r.json();
-        return data.data;
-      } catch (e) {
-        $card.innerHTML = `<div class="qtitle">문제 불러오기 실패</div><div class="qmeta" style="color:#b91c1c">${e.message}</div>`;
-        return null;
       }
-    }
 
-    function renderQuiz(data, mode){
-      current = data; currentMode = mode;
-      const btns = data.choices.map((c,i)=>
-        `<button class="opt-btn" data-idx="${i}">${i+1}. ${c}</button>`).join('');
-      const imgBlock = data.image ? `
-        <div class="qimg-wrap"><img id="qimg" class="qimg" src="${data.image}" alt="천체 이미지"></div>
-        <div class="hint" style="text-align:center; margin-top:4px; font-size:11px;">
-          ${data.credit ? data.credit : ""}
-        </div>
-      ` : "";
-
-      $card.innerHTML = `
-        <div class="qtitle">${data.question}</div>
-        <div class="qmeta">${data.choices.length}지선다 · 모드: 천체 사진</div>
-        ${imgBlock}
-        <div class="opts cols-1">${btns}</div>
-        <div class="footer">
-          <div class="hint">정답을 고르세요.</div>
-          <div><button id="btnNext" class="ghost" type="button" disabled>다음 문제</button></div>
-        </div>
-      `;
-
-      const $img = document.getElementById('qimg');
-      if ($img) $img.addEventListener('click', ()=> $img.classList.toggle('lg'));
-
-      document.querySelectorAll('.opt-btn').forEach(b=>{
-        b.onclick=()=>onChoose(b);
+      const ch=document.createElement("div");
+      ch.id="choices";
+      q.choices.forEach((c,i)=>{
+        const b=document.createElement("button");
+        b.textContent=`${i+1}. ${c}`;
+        b.onclick=()=>{
+          if(i===q.answerIndex){b.classList.add("correct");alert("정답입니다! 🎉");}
+          else {b.classList.add("wrong");alert("다시 생각해보세요 😯");}
+        };
+        ch.appendChild(b);
       });
-      document.getElementById('btnNext').onclick=async()=>{
-        const q=await fetchQuiz(currentMode);
-        if(q) renderQuiz(q, currentMode);
-      };
+      box.appendChild(ch);
     }
 
-    function onChoose(btn){
-      const idx = Number(btn.dataset.idx);
-      const isCorrect = idx===current.answerIndex;
-      document.querySelectorAll('.opt-btn').forEach((b,i)=>{
-        b.disabled = true;
-        if(i===current.answerIndex) b.classList.add('correct');
-        if(i===idx && i!==current.answerIndex) b.classList.add('wrong');
-      });
-      const res=document.createElement('div');
-      res.className='result '+(isCorrect?'ok':'bad');
-      res.textContent=isCorrect ? `정답입니다! 🎉  ${current.explanation||""}`
-        : `아쉬워요 😯 정답은 「${current.choices[current.answerIndex]}」 입니다. ${current.explanation||""}`;
-      $card.appendChild(res);
-      const $btnNext = document.getElementById('btnNext');
-      $btnNext.disabled=false;
-      $btnNext.classList.remove('ghost'); $btnNext.classList.add('primary');
-    }
-
-    // 버튼 바인딩(현재는 photo만)
-    document.querySelectorAll('#modeBar button[data-mode]').forEach(b=>{
+    document.querySelectorAll("#modeBar button[data-mode]").forEach(b=>{
       b.onclick=async()=>{
-        document.querySelectorAll('#modeBar button[data-mode]').forEach(x=>x.classList.remove('primary'));
-        b.classList.add('primary');
-        const mode=b.dataset.mode; // "photo"
-        const q=await fetchQuiz(mode);
-        if(q) renderQuiz(q, mode);
+        document.querySelectorAll("#modeBar button").forEach(x=>x.classList.remove("primary"));
+        b.classList.add("primary");
+        const q=await fetchQuiz(b.dataset.mode);
+        if(q)renderQuiz(q);
       };
     });
   </script>
