@@ -1,0 +1,51 @@
+{
+  "_meta": {
+    "title": "Planet Images Manifest (NASA)",
+    "version": "1.1.0",
+    "notes": [
+      "url이 404이면 page(overview)에서 og:image를 자동 추출하여 재시도"
+    ]
+  },
+  "planets": [
+    { "name_ko": "수성", "slug": "mercury",
+      "url": "https://solarsystem.nasa.gov/system/feature_items/images/82_mercury_480x320.jpg",
+      "page": "https://solarsystem.nasa.gov/planets/mercury/overview/",
+      "source": "NASA Solar System Exploration" },
+
+    { "name_ko": "금성", "slug": "venus",
+      "url": "https://solarsystem.nasa.gov/system/feature_items/images/143_Venus-480x320.jpg",
+      "page": "https://solarsystem.nasa.gov/planets/venus/overview/",
+      "source": "NASA Solar System Exploration" },
+
+    { "name_ko": "지구", "slug": "earth",
+      "url": "https://eoimages.gsfc.nasa.gov/images/imagerecords/74000/74499/world.topo.bathy.200412.3x5400x2700.jpg",
+      "page": "https://solarsystem.nasa.gov/planets/earth/overview/",
+      "source": "NASA / GSFC" },
+
+    { "name_ko": "화성", "slug": "mars",
+      "url": "https://solarsystem.nasa.gov/system/feature_items/images/142_mars_480x320.jpg",
+      "page": "https://solarsystem.nasa.gov/planets/mars/overview/",
+      "source": "NASA Solar System Exploration" },
+
+    { "name_ko": "목성", "slug": "jupiter",
+      "url": "https://solarsystem.nasa.gov/system/feature_items/images/16_jupiter_new.png",
+      "page": "https://solarsystem.nasa.gov/planets/jupiter/overview/",
+      "source": "NASA Juno / SSE" },
+
+    { "name_ko": "토성", "slug": "saturn",
+      "url": "https://solarsystem.nasa.gov/system/feature_items/images/28_saturn.png",
+      "page": "https://solarsystem.nasa.gov/planets/saturn/overview/",
+      "source": "NASA Cassini / SSE" },
+
+    { "name_ko": "천왕성", "slug": "uranus",
+      "url": "https://solarsystem.nasa.gov/system/feature_items/images/17_uranus.png",
+      "page": "https://solarsystem.nasa.gov/planets/uranus/overview/",
+      "source": "NASA Voyager 2 / SSE" },
+
+    { "name_ko": "해왕성", "slug": "neptune",
+      "url": "https://solarsystem.nasa.gov/system/feature_items/images/82_neptune.png",
+      "page": "https://solarsystem.nasa.gov/planets/neptune/overview/",
+      "source": "NASA Voyager 2 / SSE" }
+  ]
+}
+

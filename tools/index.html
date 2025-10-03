@@ -4,13 +4,14 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>미드나잇의 천문 퀴즈 (with. AI)</title>
-  <!-- 캐시 무효화 메타 태그 -->
+  <!-- 캐시 무효화 -->
   <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
   <style>
     :root { --fg:#0f172a; --muted:#6b7280; --bg:#f6f7fb; --card:#fff; --line:#e5e7eb;
             --primary:#111827; --ok:#16a34a; --bad:#dc2626; --btn:#fff; }
+    * { box-sizing: border-box; }
     body { margin: 0; font-family: -apple-system, system-ui, Segoe UI, Roboto, 'Noto Sans KR', sans-serif; background: var(--bg); color: var(--fg); }
     header { position: sticky; top: 0; z-index: 10; background: rgba(246,247,251,.85); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
     .wrap { max-width: 980px; margin: 0 auto; padding: 14px 16px; }
@@ -19,24 +20,32 @@
     .hint { color: var(--muted); font-size: 12px; }
     button { appearance: none; border:1px solid var(--line); background: var(--btn); padding:10px 14px; border-radius: 12px; cursor:pointer; }
     button.primary { background: var(--primary); color:#fff; border:none; }
+    button.ghost { background:transparent; }
+    button:disabled { opacity: .6; cursor: not-allowed; }
+    .seg { display:flex; gap:6px; flex-wrap:wrap; }
+    main { padding: 22px 16px 10px; }
+    .card { margin: 0 auto; max-width: 880px; background: var(--card); border-radius: 16px; box-shadow: 0 8px 24px rgba(0,0,0,.06); border:1px solid var(--line); padding: 18px; }
+    .qtitle { font-size: 18px; font-weight: 700; line-height: 1.35; }
+    .qmeta { margin-top: 6px; font-size: 12px; color: var(--muted); }
+    .qimg-wrap { margin: 10px 0 6px; display:flex; justify-content:center; }
+    .qimg { max-width:100%; height:auto; max-height: 42vh; object-fit: contain; border:1px solid var(--line); border-radius:8px; background:#fff; cursor: zoom-in; }
+    .qimg.lg { max-height: 86vh; cursor: zoom-out; }
+    @media (max-width: 640px) { .qimg { max-height: 52vh; } }
+    .opts { display:grid; gap:10px; margin-top: 10px; }
+    .opts.cols-1 { grid-template-columns: 1fr; }
+    .opt-btn { padding: 12px; text-align:left; border:1px solid var(--line); border-radius:12px; background:#fff; transition: transform .06s ease, border-color .06s ease; }
+    .opt-btn:hover { transform: translateY(-1px); }
+    .opt-btn.correct { border-color: #86efac; box-shadow: 0 0 0 3px rgba(22,163,74,.15) inset; }
+    .opt-btn.wrong   { border-color: #fca5a5; box-shadow: 0 0 0 3px rgba(220,38,38,.12) inset; }
+    .result { margin-top: 12px; padding: 10px 12px; border-radius:12px; font-weight:600; }
+    .result.ok  { background: #ecfdf5; color:#065f46; }
+    .result.bad { background: #fef2f2; color:#7f1d1d; }
+    .footer { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:14px; }
     .badge { border:1px solid var(--line); border-radius: 999px; padding: 4px 10px; font-size: 12px; }
     .badge.ok { color:#047857; border-color:#34d399; }
     .badge.fail { color:#b91c1c; border-color:#f87171; }
-    main { padding: 22px 16px 10px; }
-    .card { margin: 0 auto; max-width: 880px; background: var(--card); border-radius: 16px; box-shadow: 0 8px 24px rgba(0,0,0,.06); border:1px solid var(--line); padding: 18px; }
-    .qtitle { font-size: 18px; font-weight: 700; }
-    .opts { display:grid; gap:10px; margin-top: 10px; }
-    .opt-btn { padding: 12px; border:1px solid var(--line); border-radius:12px; background:#fff; cursor:pointer; }
-    .opt-btn.correct { border-color: #16a34a; }
-    .opt-btn.wrong { border-color: #dc2626; }
-    .result { margin-top: 12px; padding: 10px 12px; border-radius:12px; font-weight:600; }
-    .result.ok { background: #ecfdf5; color:#065f46; }
-    .result.bad { background: #fef2f2; color:#7f1d1d; }
-    .footer { display:flex; align-items:center; justify-content:space-between; margin-top:14px; }
-    .brand { max-width: 980px; margin: 10px auto 0; text-align:center; }
-    .brand img { max-width: 130px; width: 30%; height: auto; }
-    .credit { margin: 16px auto 24px; text-align: center; font-size: 12px; line-height: 1.6; color: #6b7280; }
-    .credit .yt { display: inline-block; margin-top: 6px; font-weight: 600; color: #1d4ed8; text-decoration: none; }
+    .credit { margin: 16px auto 24px; padding: 12px; text-align: center; font-size: 12px; line-height: 1.6; color: #6b7280; max-width: 980px; }
+    .credit .warn { display: block; margin-top: 12px; font-size: 11px; color: #b91c1c; }
   </style>
 </head>
 <body>
@@ -48,44 +57,34 @@
     </div>
     <div class="wrap">
       <div class="seg" id="modeBar">
-        <button data-mode="random" class="primary">랜덤</button>
-        <button data-mode="image">성도(이미지)</button>
-        <button data-mode="season">계절</button>
-        <button data-mode="star">밝은 별 소속</button>
-        <button data-mode="hemisphere">북·남반구 구분</button>
-        <!-- 달 버튼 제거 -->
-        <button data-mode="solar">태양계</button>
+        <button data-mode="photo" class="primary">천체 사진</button>
       </div>
-      <div class="hint" style="margin-top:6px;">문제 유형 버튼을 누르면 화면이 새 문제로 교체됩니다.</div>
+      <div class="hint" style="margin-top:6px;">사진을 보고 천체를 맞혀보세요.</div>
     </div>
   </header>
 
   <main>
-    <div id="card" class="card">
-      <div class="qtitle">시작하려면 위에서 퀴즈 유형을 선택하세요.</div>
-    </div>
-    <div class="brand">
-      <img src="/public/brand/midnight_logo.png" alt="MIDNIGHT brand">
+    <div id="card" class="card" aria-live="polite">
+      <div class="qtitle">“천체 사진” 버튼을 눌러 시작하세요.</div>
+      <div class="qmeta">이미지를 클릭하면 크게/작게 전환됩니다.</div>
     </div>
   </main>
 
   <footer class="credit">
-    This AI chatbot was planned by MIDNIGHT and built with AI support from ChatGPT.<br>
-    Constellation and solar system data are based on public resources from IAU, Sky & Telescope, Stellarium, and the HYG Database.<br><br>
-    <a class="yt" href="https://www.youtube.com/@midnight_astro" target="_blank">Youtube 미드나잇 천체관측 channel</a><br><br>
     © <span id="year"></span> MIDNIGHT · All Rights Reserved.<br>
     Unauthorized reproduction, modification, distribution, or commercial use is strictly prohibited.
+    <span class="warn">※ 본 페이지의 일부 이미지는 사용자 제공 로컬 에셋입니다.</span>
   </footer>
 
   <script>
     document.getElementById('year').textContent = new Date().getFullYear();
 
     // 서버 상태
-    (async function(){
+    (async function health() {
       const $health = document.getElementById('health');
       try {
-        const r = await fetch('/health',{cache:'no-store'});
-        if(!r.ok) throw new Error();
+        const r = await fetch('/health', {cache:'no-store'});
+        if (!r.ok) throw new Error();
         await r.json();
         $health.textContent = '서버 연결 OK';
         $health.classList.remove('fail'); $health.classList.add('ok');
@@ -96,7 +95,7 @@
     })();
 
     const $card = document.getElementById('card');
-    let current = null, currentMode = 'random';
+    let current = null, currentMode = 'photo';
 
     async function fetchQuiz(mode) {
       try {
@@ -105,10 +104,14 @@
           headers: {'Content-Type':'application/json'},
           body: JSON.stringify({ mode })
         });
+        if (!r.ok) {
+          const t = await r.text();
+          throw new Error(`HTTP ${r.status} /chat → ${t}`);
+        }
         const data = await r.json();
         return data.data;
       } catch (e) {
-        $card.innerHTML = `<div class="qtitle">문제 불러오기 실패</div>`;
+        $card.innerHTML = `<div class="qtitle">문제 불러오기 실패</div><div class="qmeta" style="color:#b91c1c">${e.message}</div>`;
         return null;
       }
     }
@@ -117,16 +120,33 @@
       current = data; currentMode = mode;
       const btns = data.choices.map((c,i)=>
         `<button class="opt-btn" data-idx="${i}">${i+1}. ${c}</button>`).join('');
+      const imgBlock = data.image ? `
+        <div class="qimg-wrap"><img id="qimg" class="qimg" src="${data.image}" alt="천체 이미지"></div>
+        <div class="hint" style="text-align:center; margin-top:4px; font-size:11px;">
+          ${data.credit ? data.credit : ""}
+        </div>
+      ` : "";
+
       $card.innerHTML = `
         <div class="qtitle">${data.question}</div>
-        <div class="opts">${btns}</div>
-        <div class="footer"><button id="btnNext" disabled>다음 문제</button></div>`;
+        <div class="qmeta">${data.choices.length}지선다 · 모드: 천체 사진</div>
+        ${imgBlock}
+        <div class="opts cols-1">${btns}</div>
+        <div class="footer">
+          <div class="hint">정답을 고르세요.</div>
+          <div><button id="btnNext" class="ghost" type="button" disabled>다음 문제</button></div>
+        </div>
+      `;
+
+      const $img = document.getElementById('qimg');
+      if ($img) $img.addEventListener('click', ()=> $img.classList.toggle('lg'));
+
       document.querySelectorAll('.opt-btn').forEach(b=>{
         b.onclick=()=>onChoose(b);
       });
       document.getElementById('btnNext').onclick=async()=>{
         const q=await fetchQuiz(currentMode);
-        if(q) renderQuiz(q,currentMode);
+        if(q) renderQuiz(q, currentMode);
       };
     }
 
@@ -140,19 +160,22 @@
       });
       const res=document.createElement('div');
       res.className='result '+(isCorrect?'ok':'bad');
-      res.textContent=isCorrect ? `정답입니다! 🎉 ${current.explanation||""}`
-        : `오답 😯 정답은 ${current.choices[current.answerIndex]}`;
+      res.textContent=isCorrect ? `정답입니다! 🎉  ${current.explanation||""}`
+        : `아쉬워요 😯 정답은 「${current.choices[current.answerIndex]}」 입니다. ${current.explanation||""}`;
       $card.appendChild(res);
-      document.getElementById('btnNext').disabled=false;
+      const $btnNext = document.getElementById('btnNext');
+      $btnNext.disabled=false;
+      $btnNext.classList.remove('ghost'); $btnNext.classList.add('primary');
     }
 
+    // 버튼 바인딩(현재는 photo만)
     document.querySelectorAll('#modeBar button[data-mode]').forEach(b=>{
       b.onclick=async()=>{
         document.querySelectorAll('#modeBar button[data-mode]').forEach(x=>x.classList.remove('primary'));
         b.classList.add('primary');
-        const mode=b.dataset.mode;
+        const mode=b.dataset.mode; // "photo"
         const q=await fetchQuiz(mode);
-        if(q) renderQuiz(q,mode);
+        if(q) renderQuiz(q, mode);
       };
     });
   </script>
